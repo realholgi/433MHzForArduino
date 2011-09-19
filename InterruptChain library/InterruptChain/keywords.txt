@@ -1,0 +1,3 @@
+InterruptChain	KEYWORD1
+addInterruptCallback	KEYWORD2
+setMode		KEYWORD2

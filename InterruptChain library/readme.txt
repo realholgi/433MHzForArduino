@@ -1,0 +1,24 @@
+InterruptChain library v1.0.0 (20110919) for Arduino 0022
+Made by Randy Simons http://randysimons.nl/
+
+This library allows for daisychaining the interrupts, i.e. you can attach
+more than one interrupt handler to a single interrupt.
+
+See the examples for usage. See InterruptChainLib.h for details!
+
+License: GPLv3. See ./InterruptChain/license.txt
+
+Latest source and wiki: https://bitbucket.org/fuzzillogic/433mhzforarduino
+
+
+Installation of library:
+ - Make sure Arduino is closed
+ - Copy the directory InterruptChain to the Arduino library directory (usually
+   <arduinodir>/libraries/) 
+
+Examples are provided.
+
+
+Changelog:
+InterruptChain library v1.0.0 (20110919) for Arduino 0022
+ - First release
