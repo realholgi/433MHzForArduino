@@ -1,5 +1,5 @@
 /* 
- * RemoteSwitch library v2.1.0 made by Randy Simons http:// andysimons.nl
+ * RemoteSwitch library v2.1.1 made by Randy Simons http://randysimons.nl/
  *
  * License: GPLv3. See license.txt
  */

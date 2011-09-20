@@ -1,4 +1,4 @@
-RemoteSwitch library v2.1.0 (20110919) for Arduino 0022
+RemoteSwitch library v2.1.1 (20110920) for Arduino 0022
 Made by Randy Simons http://randysimons.nl/
 
 This library provides an easy class for Arduino, to send and receive signals
@@ -36,6 +36,9 @@ Default installation receiver & demo:
 
 
 Changelog:
+RemoteSwitch library v2.1.1 (20110920) for Arduino 0022
+ - Improved RemoteReceiver::isReceiving
+ 
 RemoteSwitch library v2.1.0 (20110919) for Arduino 0022
  - Changed classnames from *Switch to *Transmitter
  - Added RemoteTransmitter::sendCode. See example "retransmitter".
