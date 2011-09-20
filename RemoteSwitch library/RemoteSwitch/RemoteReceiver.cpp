@@ -45,25 +45,25 @@ void RemoteReceiver::interruptHandler() {
 		return;
 	}
 	
-	static unsigned int period;				// alculated duration of 1 period
-	static unsigned short receivedBit;		// ontains "bit" currently receiving
-	static unsigned long receivedCode;		// ontains received code
-	static unsigned long previousCode;		// ontains previous received code
-	static unsigned short repeats = 0;		// he number of times the an identical code is received in a row.
-	static unsigned long lastChange = 0;	// imestamp of previous edge
+	static unsigned int period;				// Calculated duration of 1 period
+	static unsigned short receivedBit;		// Contains "bit" currently receiving
+	static unsigned long receivedCode;		// Contains received code
+	static unsigned long previousCode;		// Contains previous received code
+	static unsigned short repeats = 0;		// The number of times the an identical code is received in a row.
+	static unsigned long lastChange = 0;	// Timestamp of previous edge
 	static unsigned int min1Period, max1Period, min3Period, max3Period;
 
 	unsigned long currentTime=micros();
-	unsigned int duration=currentTime-lastChange; // uration = Time between edges
+	unsigned int duration=currentTime-lastChange; // Duration = Time between edges
 	lastChange=currentTime;
 
-	if (_state==-1) { // aiting for sync-signal		
+	if (_state==-1) { // Waiting for sync-signal		
 		if (duration>3720) { // =31*120 minimal time between two edges before decoding starts.
-			// ync signal received.. Preparing for decoding			
+			// Sync signal received.. Preparing for decoding			
 			period=duration/31;
 			receivedCode=previousCode=repeats=0;
 
-			// llow for large error-margin. ElCheapo-hardware :( 
+			// Allow for large error-margin. ElCheapo-hardware :( 
 			min1Period=period*4/10; // void floating point math; saves memory.
 			max1Period=period*16/10;
 			min3Period=period*23/10;
@@ -153,9 +153,9 @@ void RemoteReceiver::interruptHandler() {
 boolean RemoteReceiver::isReceiving(int waitMillis) {
 	unsigned long startTime=millis();
 	
-	int waited; // igned int!
+	int waited; // Signed int!
 	do {
-		if (_state!=-1) {
+		if (_state == 48) { // Abort if a valid code has been received in the mean time
 			return true;
 		}
 		waited = (millis()-startTime);

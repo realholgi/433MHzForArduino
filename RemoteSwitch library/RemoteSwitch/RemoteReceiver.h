@@ -63,7 +63,7 @@ class RemoteReceiver {
 		* @param waitMillis number of milliseconds to monitor for signal.
 		* @return boolean If after waitMillis no signal was being processed, returns false. If before expiration a signal was being processed, returns true.
 		*/
-		static boolean isReceiving(int waitMillis = 50);
+		static boolean isReceiving(int waitMillis = 100);
 				
 		static void interruptHandler();
 		
