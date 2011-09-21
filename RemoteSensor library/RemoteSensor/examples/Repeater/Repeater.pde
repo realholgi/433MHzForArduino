@@ -15,6 +15,10 @@
 
 void setup() {
   pinMode(LED_PIN, OUTPUT);
+  
+  // Since we're not instantiating SensorTransmitter, but only use the static methods of SensorTransmitter,
+  // the pin mode must be set manually.
+  pinMode(TRANSMITTER_PIN, OUTPUT); 
 
   // When no signal has been received, the LED is lit.
   digitalWrite(LED_PIN, HIGH);   

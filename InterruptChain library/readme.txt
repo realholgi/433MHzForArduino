@@ -1,4 +1,4 @@
-InterruptChain library v1.0.0 (20110919) for Arduino 0022
+InterruptChain library v1.1.0 (20110921) for Arduino 0022
 Made by Randy Simons http://randysimons.nl/
 
 This library allows for daisychaining the interrupts, i.e. you can attach
@@ -20,5 +20,8 @@ Examples are provided.
 
 
 Changelog:
+InterruptChain library v1.1.0 (20110921) for Arduino 0022
+ - Added enable, disable. Expanded setMode.
+
 InterruptChain library v1.0.0 (20110919) for Arduino 0022
  - First release
