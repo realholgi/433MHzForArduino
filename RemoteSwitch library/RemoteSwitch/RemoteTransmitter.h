@@ -1,5 +1,5 @@
 /*
- * RemoteSwitch library v2.1.1 made by Randy Simons http://randysimons.nl/
+ * RemoteSwitch library v2.2.0 - DEV made by Randy Simons http://randysimons.nl/
  *
  * License: GPLv3. See license.txt
  */
@@ -37,7 +37,7 @@ class RemoteTransmitter {
 		*
 		* @param pin		output pin on Arduino to which the transmitter is connected
 		* @param periodusec	[0..511] Duration of one period, in microseconds. A trit is 6 periods.
-		* @param repeats	[0..7] The 2log-Number of times the signal is repeated. The actual number of repeats will be 2^repeats. 3 would be a good start.
+		* @param repeats	[0..7] The 2log-Number of times the signal is repeated. The actual number of repeats will be 2^repeats. 2 would be bare minimum, 4 seems robust.
 		*/		
 		RemoteTransmitter(unsigned short pin, unsigned int periodusec, unsigned short repeats);
 		
@@ -78,7 +78,7 @@ class RemoteTransmitter {
 		*
 		* @param pin		output pin on Arduino to which the transmitter is connected
 		* @param periodusec	[0..511] Duration of one period, in microseconds. A trit is 6 periods.
-		* @param repeats	[0..7] The 2log-Number of times the signal is repeated. The actual number of repeats will be 2^repeats. 3 would be a good start.
+		* @param repeats	[0..7] The 2log-Number of times the signal is repeated. The actual number of repeats will be 2^repeats. 2 would be bare minimum, 4 seems robust.
 		* @param code		The code to transmit. Note: only the first 20 bits are used, the rest is ignored. Also see sendTelegram.
 		*/		
 		static void sendCode(unsigned short pin, unsigned long code, unsigned int periodusec, unsigned short repeats);
@@ -108,9 +108,10 @@ class ActionTransmitter: RemoteTransmitter {
 		*
 		* @param pin		output pin on Arduino to which the transmitter is connected
 		* @param periodsec	Duration of one period, in microseconds. Default is 190usec
+		* @param repeats	[0..7] The 2log-Number of times the signal is repeated.
 		* @see RemoteTransmitter
 		*/
-		ActionTransmitter(unsigned short pin, unsigned int periodusec=190);
+		ActionTransmitter(unsigned short pin, unsigned int periodusec=190, unsigned short repeats=4);
 		
 		/**
 		* Send a on or off signal to a device.
@@ -142,9 +143,10 @@ class BlokkerTransmitter: RemoteTransmitter {
 		*
 		* @param pin		output pin on Arduino to which the transmitter is connected
 		* @param periodsec	Duration of one period, in microseconds. Default is 307usec
+		* @param repeats	[0..7] The 2log-Number of times the signal is repeated.
 		* @see RemoteTransmitter
 		*/
-		BlokkerTransmitter(unsigned short pin, unsigned int periodusec=230);
+		BlokkerTransmitter(unsigned short pin, unsigned int periodusec=230, unsigned short repeats=4);
 		
 		/**
 		* Send a on or off signal to a device.
@@ -171,9 +173,10 @@ class KaKuTransmitter: RemoteTransmitter {
 		*
 		* @param pin		output pin on Arduino to which the transmitter is connected
 		* @param periodsec	Duration of one period, in microseconds. Default is 375usec
+		* @param repeats	[0..7] The 2log-Number of times the signal is repeated.
 		* @see RemoteTransmitter
 		*/
-		KaKuTransmitter(unsigned short pin, unsigned int periodusec=375);
+		KaKuTransmitter(unsigned short pin, unsigned int periodusec=375, unsigned short repeats=4);
 		
 		/**
 		* Send a on or off signal to a device.

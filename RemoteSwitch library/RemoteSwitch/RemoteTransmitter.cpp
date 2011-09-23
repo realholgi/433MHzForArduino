@@ -1,5 +1,5 @@
 /* 
- * RemoteSwitch library v2.1.1 made by Randy Simons http://randysimons.nl/
+ * RemoteSwitch library v2.2.0 - DEV made by Randy Simons http://randysimons.nl/
  * See RemoteTransmitter.h for details.
  *
  * License: GPLv3. See license.txt
@@ -128,7 +128,7 @@ boolean RemoteTransmitter::isSameCode(unsigned long encodedTelegram, unsigned lo
 * ActionTransmitter
 ************/
 
-ActionTransmitter::ActionTransmitter(unsigned short pin, unsigned int periodusec) : RemoteTransmitter(pin,periodusec,3) {
+ActionTransmitter::ActionTransmitter(unsigned short pin, unsigned int periodusec, unsigned short repeats) : RemoteTransmitter(pin,periodusec,repeats) {
 	// Call contructor
 }
 
@@ -162,7 +162,7 @@ unsigned long ActionTransmitter::getTelegram(unsigned short systemCode, char dev
 * BlokkerTransmitter
 ************/
 
-BlokkerTransmitter::BlokkerTransmitter(unsigned short pin, unsigned int periodusec) : RemoteTransmitter(pin,periodusec,3) {
+BlokkerTransmitter::BlokkerTransmitter(unsigned short pin, unsigned int periodusec, unsigned short repeats) : RemoteTransmitter(pin,periodusec,repeats) {
 	// Call contructor
 }
 
@@ -192,7 +192,7 @@ unsigned long BlokkerTransmitter::getTelegram(unsigned short device, boolean on)
 * KaKuTransmitter
 ************/
 
-KaKuTransmitter::KaKuTransmitter(unsigned short pin, unsigned int periodusec) : RemoteTransmitter(pin,periodusec,3) {
+KaKuTransmitter::KaKuTransmitter(unsigned short pin, unsigned int periodusec, unsigned short repeats) : RemoteTransmitter(pin,periodusec,repeats) {
 	// Call contructor
 }
 

@@ -1,5 +1,5 @@
 /*
- * RemoteSensor v1.0.0
+ * RemoteSensor v1.0.1 - DEV
  *
  * This library encodes, encrypts en transmits data to
  * remote weather stations made by Hideki Electronics..
@@ -62,6 +62,11 @@ void SensorReceiver::interruptHandler() {
 	if (halfBit==0) {
 		// Automatic clock detection. One clock-period is half the duration of the first edge.
 		clockTime = duration >> 1;
+		
+		// Some sanity checking, very short (<200us) or very long (>1000us) signals are ignored.
+		if (clockTime < 200 || clockTime > 1000) {
+			return;
+		}
 		isOne = true;
 	} 
 	else {
@@ -132,6 +137,7 @@ void SensorReceiver::interruptHandler() {
 			}
 		}
 
+		//digitalWrite(12, isOne);
 		// Edge is long?
 		if (duration > clockTime + (clockTime >> 1)) { // read as: duration > 1.5 * clockTime
 			// Long edge.
