@@ -37,6 +37,8 @@ Default installation receiver & demo:
 
 Changelog:
 RemoteSwitch library v2.2.0 - DEV for Arduino 0022
+ - Added support for Elro switches (http://www.elro.eu/en/m/products/category/home_automation/home_control)
+   (untested; I don't have these kind of devices)
  - Allowed the number of repeated signals transmitted by RemoteTransmitter to be
    changed.
  - By default, 16 instead of 8 repeats are sent.

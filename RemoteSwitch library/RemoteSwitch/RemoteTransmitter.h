@@ -99,7 +99,8 @@ class RemoteTransmitter {
 
 /**
 * ActionTransmitter simulatos a remote, as sold in the Dutch 'Action' stores. But there are many similar systems on the market.
-* If your remote has setting for 5 address bits, and can control 5 devices on or off, then you can try to use the ActionTransmitter
+* If your remote has setting for 5 address bits, and can control 5 devices on or off, then you can try to use the ActionTransmitter.
+* Otherwise you may have luck with the ElroTransmitter, which is similar.
 */
 class ActionTransmitter: RemoteTransmitter {
 	public:
@@ -206,6 +207,43 @@ class KaKuTransmitter: RemoteTransmitter {
 		* @see RemoteTransmitter::getTelegram
 		*/
 		unsigned long getTelegram(char address, unsigned short device, boolean on);
+};
+
+/**
+* ElroTransmitter simulates remotes of the Elro "Home Control" series
+* see http://www.elro.eu/en/m/products/category/home_automation/home_control
+* There are are many similar systems on the market. If your remote has setting for 5 address bits, and can control
+* 4 devices on or off, then you can try to use the ElroTransmitter. Otherwise you may have luck with the
+* ActionTransmitter, which is similar.
+*/
+class ElroTransmitter: RemoteTransmitter {
+	public:
+		/**
+		* Constructor
+		*
+		* @param pin		output pin on Arduino to which the transmitter is connected
+		* @param periodsec	Duration of one period, in microseconds. Default is 320usec
+		* @param repeats	[0..7] The 2log-Number of times the signal is repeated.
+		* @see RemoteSwitch
+		*/
+		ElroTransmitter(unsigned short pin, unsigned int periodusec=320, unsigned short repeats=4);
+
+		/**
+		* Send a on or off signal to a device.
+		*
+		* @param systemCode	5-bit addres (dip switches in remote). Range [0..31]
+		* @param device	Device to switch. Range: [A..D] (case sensitive!)
+		* @param on	True, to switch on. False to switch off,
+		*/
+		void sendSignal(unsigned short systemCode, char device, boolean on);
+
+		/**
+		* Generates the telegram (data) which can be used for RemoteSwitch::sendTelegram.
+		* See sendSignal for details on the parameters
+		*
+		* @return Encoded data, including repeats and period duration.
+		*/
+		unsigned long getTelegram(unsigned short systemCode, char device, boolean on);
 };
 
 #endif

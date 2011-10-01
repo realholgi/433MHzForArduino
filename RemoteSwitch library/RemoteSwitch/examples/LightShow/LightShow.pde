@@ -19,6 +19,9 @@ KaKuTransmitter kaKuTransmitter(11);
 // Intantiate a new Blokker remote, also use pin 11 (same transmitter!)
 BlokkerTransmitter blokkerTransmitter(11);
 
+// Intantiate a new Elro remote, also use pin 11 (same transmitter!)
+ElroTransmitter elroTransmitter(11);
+
 
 void setup() {
 }
@@ -33,6 +36,8 @@ void loop() {
   // Switch on Blokker-device 7.
   blokkerTransmitter.sendSignal(7,true);
   
+  // Switch on Elro-device C on system code 1.
+  elroTransmitter.sendSignal(1,'C',true);
   
   
   // Wait 2 seconds
@@ -49,6 +54,8 @@ void loop() {
   // Switch off Blokker-device 7.
   blokkerTransmitter.sendSignal(7,false);
   
+  // Switch off Elro-device C on system code 1.
+  elroTransmitter.sendSignal(1,'C',false);  
   
   
   // Wait 4 seconds
