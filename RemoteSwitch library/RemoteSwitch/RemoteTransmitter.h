@@ -7,7 +7,11 @@
 #ifndef RemoteTransmitter_h
 #define RemoteTransmitter_h
 
-#include "WProgram.h"
+#if (ARDUINO >= 100)
+	#include <Arduino.h>
+#else
+	#include <WProgram.h>
+#endif
 
 /**
 * RemoteTransmitter provides a generic class for simulation of common RF remote controls, like the 'Klik aan Klik uit'-system 

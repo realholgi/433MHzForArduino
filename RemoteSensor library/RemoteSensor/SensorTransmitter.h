@@ -15,7 +15,11 @@
 #ifndef SensorTransmitter_h
 #define SensorTransmitter_h
 
-#include "WProgram.h"
+#if (ARDUINO >= 100)
+	#include <Arduino.h>
+#else
+	#include <WProgram.h>
+#endif
 
 /**
  * SensorTransmitter provides a generic class to simulate Cresta weather sensors, for use

@@ -1,5 +1,5 @@
 /*
- * IntereruptChain library v1.1.0
+ * IntereruptChain library v1.2.0 DEV
  *
  * Copyright 2011 by Randy Simons http://randysimons.nl/
  *
@@ -9,7 +9,11 @@
 #ifndef InterruptChain_h
 #define InterruptChain_h
 
-#include "WProgram.h"
+#if (ARDUINO >= 100)
+	#include <Arduino.h>
+#else
+	#include <WProgram.h>
+#endif
 
 // Arduino Mega has 6 interrupts. For smaller Arduinos and / or to save a few bytes memory you can lower it to 2 or even 1. Don't go higher than 6 tho.
 #define MAX_INTERRUPTS 6

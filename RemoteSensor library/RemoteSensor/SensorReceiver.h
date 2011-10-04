@@ -17,7 +17,11 @@
 #ifndef SensorReceiver_h
 #define SensorReceiver_h
 
-#include "WProgram.h"
+#if (ARDUINO >= 100)
+	#include <Arduino.h>
+#else
+	#include <WProgram.h>
+#endif
 
 typedef void (*SensorReceiverCallback)(byte *); // pointer to data
 

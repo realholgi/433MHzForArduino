@@ -1,4 +1,4 @@
-RemoteSwitch library v2.2.0 - DEV for Arduino 0022
+RemoteSwitch library v2.2.0 - DEV for Arduino 0022/1.0
 Made by Randy Simons http://randysimons.nl/
 
 This library provides an easy class for Arduino, to send and receive signals
@@ -36,13 +36,14 @@ Default installation receiver & demo:
 
 
 Changelog:
-RemoteSwitch library v2.2.0 - DEV for Arduino 0022
+RemoteSwitch library v2.2.0 - DEV for Arduino 0022/1.0
  - Added support for Elro switches (http://www.elro.eu/en/m/products/category/home_automation/home_control)
    (untested; I don't have these kind of devices)
  - Allowed the number of repeated signals transmitted by RemoteTransmitter to be
    changed.
  - By default, 16 instead of 8 repeats are sent.
- 
+ - Support for Arduino 1.0.
+  
 RemoteSwitch library v2.1.1 (20110920) for Arduino 0022
  - Improved RemoteReceiver::isReceiving
  
