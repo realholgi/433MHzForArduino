@@ -33,6 +33,11 @@ Default installation receiver & demo:
  - Compile, upload and run
  - Open serial monitor in Arduino (115200 baud)
  - Press buttons on a 433MHz-remote, and watch the serial monitor
+ 
+Notes:
+ - These transmitters often use the PT2262 IC, or equivalent. For details about 
+   the waveforms used by these remotes, the datasheet of the PT2262 is provided.
+   Page 4 and 5 will be of most interest.
 
 
 Changelog:
@@ -43,7 +48,8 @@ RemoteSwitch library v2.2.0 - DEV for Arduino 0022/1.0
    changed.
  - By default, 16 instead of 8 repeats are sent.
  - Support for Arduino 1.0.
-  
+ - Added Datasheet PT2262, which (or equivalent) is often used in the transmitters.
+ 
 RemoteSwitch library v2.1.1 (20110920) for Arduino 0022
  - Improved RemoteReceiver::isReceiving
  
