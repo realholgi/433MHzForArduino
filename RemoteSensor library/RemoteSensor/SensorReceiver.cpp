@@ -1,5 +1,5 @@
 /*
- * RemoteSensor v1.0.1 - DEV
+ * RemoteSensor v1.0.1 (20120213)
  *
  * This library encodes, encrypts en transmits data to
  * remote weather stations made by Hideki Electronics..
@@ -137,7 +137,6 @@ void SensorReceiver::interruptHandler() {
 			}
 		}
 
-		//digitalWrite(12, isOne);
 		// Edge is long?
 		if (duration > clockTime + (clockTime >> 1)) { // read as: duration > 1.5 * clockTime
 			// Long edge.

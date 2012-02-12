@@ -1,4 +1,4 @@
-RemoteSensor library v1.0.1 - DEV for Arduino 0022/1.0
+RemoteSensor library v1.0.1 (20120213) for Arduino 0022/1.0
 Made by Randy Simons http://randysimons.nl/
 
 This library provides an easy class for Arduino, to send and receive signals
@@ -45,7 +45,7 @@ Default installation receiver & demo:
 
 
 Changelog:
-RemoteSensor library v1.0.1 - DEV for Arduino 0022/1.0
+RemoteSensor library v1.0.1 (20120213) for Arduino 0022/1.0
  - Ignore obviously too short or too long singals in SensorReceiver, for better
    recognition rate.
  - Support for Arduino 1.0.
