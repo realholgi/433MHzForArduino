@@ -282,26 +282,22 @@ void ElroTransmitter::sendSignal(unsigned short systemCode, char device, boolean
 }
 
 unsigned long ElroTransmitter::getTelegram(unsigned short systemCode, char device, boolean on) {
-	unsigned short trits[15];
+	unsigned short trits[12];
 
 	device-=65;
 
 	for (unsigned short i=0; i<5; i++) {
-		//bits 0-4 contain address (2^5=32 addresses)
+		//trits 0-4 contain address (2^5=32 addresses)
 		trits[i]=(systemCode & 1)?0:2;
 		systemCode>>=1;
 
-		//bits 5-9 contain device. Only one trit has value 0, others have 2 (float)!
+		//trits 5-9 contain device. Only one trit has value 0, others have 2 (float)!
 		trits[i+5]=(i==device?0:2);
     }
 
 	//switch on or off
 	trits[10]=(on?0:2);
 	trits[11]=(!on?0:2);
-	trits[12]=0;
-	trits[13]=2;
-	trits[14]=2;
-	trits[15]=2;
 
 	return encodeTelegram(trits);
 }
