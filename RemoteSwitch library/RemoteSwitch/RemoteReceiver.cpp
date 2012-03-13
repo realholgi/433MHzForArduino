@@ -1,5 +1,5 @@
 /* 
- * RemoteSwitch library v2.2.0 (20120213) made by Randy Simons http://randysimons.nl/
+ * RemoteSwitch library v2.2.1 (20120314) made by Randy Simons http://randysimons.nl/
  * See RemoteReceiver.h for details.
  *
  * License: GPLv3. See license.txt

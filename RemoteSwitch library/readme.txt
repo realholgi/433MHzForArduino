@@ -41,6 +41,10 @@ Notes:
 
 
 Changelog:
+RemoteSwitch library v2.2.1 (20120314) for Arduino 0022/1.0
+ - Fixed Elro code, it caused memory corruption.
+ - Renamed old-style .pde files to new-style .ino
+
 RemoteSwitch library v2.2.0 (20120213) for Arduino 0022/1.0
  - Added support for Elro switches (http://www.elro.eu/en/m/products/category/home_automation/home_control)
    (untested; I don't have these kind of devices)
