@@ -1,5 +1,5 @@
 /*
- * RemoteSensor v1.0.1 - DEV
+ * RemoteSensor v1.0.1 (20120213)
  * 
  * This library receives, decodes, decrypts and receives data of
  * remote weather sensors made by Hideki Electronics.

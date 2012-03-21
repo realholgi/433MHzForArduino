@@ -1,5 +1,5 @@
 /* 
- * RemoteSwitch library v2.2.0 - DEV made by Randy Simons http://randysimons.nl/
+ * RemoteSwitch library v2.2.1 (20120314) made by Randy Simons http://randysimons.nl/
  *
  * License: GPLv3. See license.txt
  */
@@ -58,16 +58,17 @@ class RemoteReceiver {
 		static void disable();
 		
 		/**
-		* Tells wether a signal is being received. Since it makes no sense to transmit while another transmitter is active,
-		* it's best to wait for isReceiving() to false.
+		* Tells wether a signal is being received. If a compatible signal is detected within the time out, isReceiving returns true.
+		* Since it makes no sense to transmit while another transmitter is active, it's best to wait for isReceiving() to false.
+		* By default it waits for 150ms, in which a (relative slow) KaKu signal can be broadcasted three times.
 		*
 		* Note: isReceiving() depends on interrupts enabled. Thus, when disabled()'ed, or when interrupts are disabled (as is
 		* the case in the callback), isReceiving() will not work properly.
-		
+		*		
 		* @param waitMillis number of milliseconds to monitor for signal.
 		* @return boolean If after waitMillis no signal was being processed, returns false. If before expiration a signal was being processed, returns true.
 		*/
-		static boolean isReceiving(int waitMillis = 100);
+		static boolean isReceiving(int waitMillis = 150);
 				
 		static void interruptHandler();
 		
