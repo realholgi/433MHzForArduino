@@ -76,7 +76,13 @@ void NewKakuReceiver::interruptHandler() {
 
     unsigned long currentTime=micros();
     unsigned int duration=currentTime-lastChange; // Duration = Time between edges
-    lastChange=currentTime;
+
+    // Filter out too short pulses
+    if (_state >= 0 && duration < min1Period) {
+        return;
+    } else {
+        lastChange=currentTime;
+    }
 
     if (_state == -1) {
         // wait for the long low part of a stop bit.
