@@ -8,7 +8,9 @@ sendCode	KEYWORD2
 sendSignal	KEYWORD2
 isSameCode	KEYWORD2
 RemoteReceiver	KEYWORD1
+NewKakuReceiver	KEYWORD1
 init	KEYWORD2
 enable	KEYWORD2
 disable	KEYWORD2
 isReceiving	KEYWORD2
+NewKakuCode	KEYWORD1

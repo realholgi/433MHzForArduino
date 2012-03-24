@@ -1,4 +1,4 @@
-RemoteSwitch library v2.2.0 (20120213) for Arduino 0022/1.0
+RemoteSwitch library v2.3.0 DEV for Arduino 0022/1.0
 Made by Randy Simons http://randysimons.nl/
 
 This library provides an easy class for Arduino, to send and receive signals
@@ -41,6 +41,10 @@ Notes:
 
 
 Changelog:
+RemoteSwitch library v2.3.0 DEV for Arduino 0022/1.0
+ - Support for receiving A-series Klik-aan-klik-uit remote. (NewKakuReceiver)
+ - Added RemoteSwitch/ShowReceivedCodeNewKaku example to demonstrate
+
 RemoteSwitch library v2.2.1 (20120314) for Arduino 0022/1.0
  - Fixed Elro code, it caused memory corruption.
  - Renamed old-style .pde files to new-style .ino
