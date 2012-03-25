@@ -71,18 +71,30 @@ void NewKakuReceiver::interruptHandler() {
     static NewKakuCode receivedCode;		// Contains received code
     static NewKakuCode previousCode;		// Contains previous received code
     static unsigned short repeats = 0;		// The number of times the an identical code is received in a row.
-    static unsigned long lastChange = 0;	// Timestamp of previous edge
+    static unsigned long edgeTimeStamp[3] = {0, };	// Timestamp of edges
     static unsigned int min1Period, max1Period, min5Period, max5Period;
+    static bool skip;
 
-    unsigned long currentTime=micros();
-    unsigned int duration=currentTime-lastChange; // Duration = Time between edges
+    // Filter out too short pulses. This method works as a low pass filter.
+    edgeTimeStamp[1] = edgeTimeStamp[2];
+    edgeTimeStamp[2] = micros();
 
-    // Filter out too short pulses
-    if (_state >= 0 && duration < min1Period) {
+    if (skip) {
+        skip = false;
         return;
-    } else {
-        lastChange=currentTime;
     }
+
+    if (_state >= 0 && edgeTimeStamp[2]-edgeTimeStamp[1] < min1Period) {
+        // Last edge was too short.
+        // Skip this edge, and the next too.
+        skip = true;
+        return;
+    }
+
+    unsigned int duration = edgeTimeStamp[1] - edgeTimeStamp[0];
+    edgeTimeStamp[0] = edgeTimeStamp[1];
+
+    // Note that if state>=0, duration is always >= 1 period.
 
     if (_state == -1) {
         // wait for the long low part of a stop bit.
@@ -95,8 +107,8 @@ void NewKakuReceiver::interruptHandler() {
             receivedCode.period = duration / 40; // Measured signal is 40T, so 1T (period) is measured signal / 40.
 
             // Allow for large error-margin. ElCheapo-hardware :(
-            min1Period = receivedCode.period >> 1; // Lower limit for 1 period is 0.5 times measured period
-            max1Period = receivedCode.period << 1; // Upper limit for 1 period is 2 times measured period
+            min1Period = receivedCode.period * 3 / 10; // Lower limit for 1 period is 0.3 times measured period; high signals can "linger" a bit sometimes, making low signals quite short.
+            max1Period = receivedCode.period * 3; // Upper limit for 1 period is 3 times measured period
             min5Period = receivedCode.period * 3; // Lower limit for 5 periods is 3 times measured period
             max5Period = receivedCode.period * 8; // Upper limit for 5 periods is 8 times measured period
         }
@@ -105,7 +117,7 @@ void NewKakuReceiver::interruptHandler() {
         }
     } else if (_state == 0) { // Verify start bit part 1 of 2
         // Duration must be ~1T
-        if (duration < min1Period || duration > max1Period) {
+        if (duration > max1Period) {
             _state = -1;
             return;
         }
@@ -122,7 +134,7 @@ void NewKakuReceiver::interruptHandler() {
 
         // One bit consists out of 4 bit parts.
         // bit part durations can ONLY be 1 or 5 periods.
-        if (duration >= min1Period && duration <= max1Period) {
+        if (duration <= max1Period) {
             receivedBit &= B1110; // Clear LSB of receivedBit
         }
         else if (duration >= min5Period && duration <= max5Period) {
@@ -281,7 +293,7 @@ boolean NewKakuReceiver::isReceiving(int waitMillis) {
 
     int waited; // Signed int!
     do {
-        if (_state == 48) { // Abort if a valid code has been received in the mean time
+        if (_state >= 34) { // Abort if a significant part of a code (start pulse + 8 bits) has been received
             return true;
         }
         waited = (millis()-startTime);
