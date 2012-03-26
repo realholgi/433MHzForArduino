@@ -1,10 +1,10 @@
 /*
  * This sketch demonstrates how to use InterruptChain to receive and
- * decode both remote switches as remote sensors.
+ * decode remote switches (old and new) and remote sensors.
  *
  * Basically, this sketch combines the features of the ShowReceivedCode
- * example of RemoteSwitch and the ThermoHygroReceiver of RemoteSensor
- * at the same time!
+ * and ShowReceivedCodeNewKaku examples of RemoteSwitch and the
+ * ThermoHygroReceiver of RemoteSensor all at the same time!
  *
  * After uploading, enable the serial monitor at 115200 baud.
  * When you press buttons on a 433MHz remote control, as supported by 
@@ -17,34 +17,74 @@
  */
 
 #include <RemoteReceiver.h>
+#include <NewKakuReceiver.h>
 #include <SensorReceiver.h>
 #include <InterruptChain.h>
 
 void setup() {
-    Serial.begin(115200);
-    
-    // Interrupt -1 to indicate you will call the interrupt handler with InterruptChain
-    RemoteReceiver::init(-1, 3, showCode);
-    
-    // Again, interrupt -1 to indicate you will call the interrupt handler with InterruptChain
-    SensorReceiver::init(-1, showTempHumi);
+  Serial.begin(115200);
 
-    // On interrupt, call the interrupt handlers of remote and sensor receivers
-    InterruptChain::addInterruptCallback(0, RemoteReceiver::interruptHandler);
-    InterruptChain::addInterruptCallback(0, SensorReceiver::interruptHandler);
+  // Interrupt -1 to indicate you will call the interrupt handler with InterruptChain
+  RemoteReceiver::init(-1, 2, showOldCode);
+  
+  // Again, interrupt -1 to indicate you will call the interrupt handler with InterruptChain
+  NewKakuReceiver::init(-1, 2, showNewCode);
+
+  // And once more, interrupt -1 to indicate you will call the interrupt handler with InterruptChain
+  SensorReceiver::init(-1, showTempHumi);
+
+  // On interrupt, call the interrupt handlers of remote and sensor receivers
+  InterruptChain::addInterruptCallback(0, RemoteReceiver::interruptHandler);
+  InterruptChain::addInterruptCallback(0, NewKakuReceiver::interruptHandler);
+  InterruptChain::addInterruptCallback(0, SensorReceiver::interruptHandler);
 }
 
 void loop() {
    // You can do other stuff here!
 }
 
-// shows the received code sent from a remote switch
-void showCode(unsigned long receivedCode, unsigned int period) {
+// shows the received code sent from an old-style remote switch
+void showOldCode(unsigned long receivedCode, unsigned int period) {
   // Print the received code.
   Serial.print("Code: ");
-  Serial.println(receivedCode);
+  Serial.print(receivedCode);
+  Serial.print(", period: ");
+  Serial.print(period);
+  Serial.println("us.");
 }
 
+// Shows the received code sent from an new-style remote switch
+void showNewCode(NewKakuCode receivedCode) {
+  // Print the received code.
+  Serial.print("Addr ");
+  Serial.print(receivedCode.address);
+  
+  if (receivedCode.groupMode) {
+    Serial.print(" group");
+  } else {
+    Serial.print(" unit ");
+    Serial.print(receivedCode.unit);
+  }
+  
+  switch (receivedCode.switchType) {
+    case 0:
+      Serial.print(" off");
+      break;
+    case 1:
+      Serial.print(" on");
+      break;
+    case 2:
+      Serial.print(" dim level");
+      Serial.print(receivedCode.dimLevel);
+      break;
+  }
+  
+  Serial.print(", period: ");
+  Serial.print(receivedCode.period);
+  Serial.println("us.");
+}
+
+// Shows the received sensor data
 void showTempHumi(byte *data) {
   // is data a ThermoHygro-device?
   if ((data[3] & 0x1f) == 0x1e) {
