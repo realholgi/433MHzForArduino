@@ -1,5 +1,5 @@
-/* 
- * RemoteSwitch library v2.2.1 (20120314) made by Randy Simons http://randysimons.nl/
+/*
+ * RemoteSwitch library v3.0.0 DEV made by Randy Simons http://randysimons.nl/
  * See RemoteTransmitter.h for details.
  *
  * License: GPLv3. See license.txt
@@ -16,30 +16,30 @@ RemoteTransmitter::RemoteTransmitter(unsigned short pin, unsigned int periodusec
 	_pin=pin;
 	_periodusec=periodusec;
 	_repeats=repeats;
-	
+
 	pinMode(_pin, OUTPUT);
 }
 
 unsigned long RemoteTransmitter::encodeTelegram(unsigned short trits[]) {
 	unsigned long data = 0;
-		
+
 	// Encode data
 	for (unsigned short i=0;i<12;i++) {
 		data*=3;
 		data+=trits[i];
 	}
-	
+
 	// Encode period duration
 	data |= (unsigned long)_periodusec << 23;
-	
+
 	// Encode repeats
 	data |= (unsigned long)_repeats << 20;
-	
+
 	return data;
 }
-		
+
 void RemoteTransmitter::sendTelegram(unsigned short trits[]) {
-	sendTelegram(encodeTelegram(trits),_pin);	
+	sendTelegram(encodeTelegram(trits),_pin);
 }
 
 /**
@@ -52,26 +52,26 @@ void RemoteTransmitter::sendTelegram(unsigned short trits[]) {
 void RemoteTransmitter::sendTelegram(unsigned long data, unsigned short pin) {
 	unsigned int periodusec = (unsigned long)data >> 23;
 	unsigned short repeats = ((unsigned long)data >> 20) & B111;
-	
-	sendCode(pin, data, periodusec, repeats);	
+
+	sendCode(pin, data, periodusec, repeats);
 }
 
 void RemoteTransmitter::sendCode(unsigned short pin, unsigned long code, unsigned int periodusec, unsigned short repeats) {
 	code &= 0xfffff; // Truncate to 20 bit ;
 	// Convert the base3-code to base4, to avoid lengthy calculations when transmitting.. Messes op timings.
 	unsigned long dataBase4 = 0;
-	
+
 	for (unsigned short i=0; i<12; i++) {
 		dataBase4<<=2;
 		dataBase4|=(code%3);
 		code/=3;
 	}
-	
+
 	repeats = 1 << (repeats & B111); // repeats := 2^repeats;
-	
-	for (unsigned short int j=0;j<repeats;j++) {		
-		// Sent one telegram		
-		
+
+	for (unsigned short int j=0;j<repeats;j++) {
+		// Sent one telegram
+
 		// Recycle code as working var to save memory
 		code=dataBase4;
 		for (unsigned short i=0; i<12; i++) {
@@ -110,7 +110,7 @@ void RemoteTransmitter::sendCode(unsigned short pin, unsigned long code, unsigne
 			// Next trit
 			code>>=2;
 		}
-		
+
 		// Send termination/synchronisation-signal. Total length: 32 periods
 		digitalWrite(pin, HIGH);
 		delayMicroseconds(periodusec);
@@ -133,28 +133,28 @@ ActionTransmitter::ActionTransmitter(unsigned short pin, unsigned int periodusec
 }
 
 
-void ActionTransmitter::sendSignal(unsigned short systemCode, char device, boolean on) {		
+void ActionTransmitter::sendSignal(unsigned short systemCode, char device, boolean on) {
 	sendTelegram(getTelegram(systemCode,device,on), _pin);
 }
 
 unsigned long ActionTransmitter::getTelegram(unsigned short systemCode, char device, boolean on) {
 	unsigned short trits[12];
-	
+
 	device-=65;
-	
+
 	for (unsigned short i=0; i<5; i++) {
 		// Trits 0-4 contain address (2^5=32 addresses)
-		trits[i]=(systemCode & 1)?1:2;          
+		trits[i]=(systemCode & 1)?1:2;
 		systemCode>>=1;
-		
+
 		// Trits 5-9 contain device. Only one trit has value 0, others have 2 (float)!
 		trits[i+5]=(i==device?0:2);
-    }
-	
+	}
+
 	// Switch on or off
 	trits[10]=(!on?0:2);
 	trits[11]=(on?0:2);
-	
+
 	return encodeTelegram(trits);
 }
 
@@ -173,18 +173,18 @@ void BlokkerTransmitter::sendSignal(unsigned short device, boolean on) {
 
 unsigned long BlokkerTransmitter::getTelegram(unsigned short device, boolean on) {
 	unsigned short trits[12]={0};
-	
+
 	device--;
-	
+
 	for (unsigned short i=1; i<4; i++) {
-		// Trits 1-3 contain device 
-		trits[i]=(device & 1)?0:1;          
+		// Trits 1-3 contain device
+		trits[i]=(device & 1)?0:1;
 		device>>=1;
-    }
-	
+	}
+
 	// Switch on or off
 	trits[8]=(on?1:0);
-	
+
 	return encodeTelegram(trits);
 }
 
@@ -202,28 +202,28 @@ void KaKuTransmitter::sendSignal(char address, unsigned short device, boolean on
 
 unsigned long KaKuTransmitter::getTelegram(char address, unsigned short device, boolean on) {
 	unsigned short trits[12];
-	
+
 	address-=65;
 	device-=1;
-	
+
 	for (unsigned short i=0; i<4; i++) {
 		// Trits 0-3 contain address (2^4 = 16 addresses)
-		trits[i]=(address & 1)?2:0;          
+		trits[i]=(address & 1)?2:0;
 		address>>=1;
-		
+
 		// Trits 4-8 contain device (2^4 = 16 addresses)
-		trits[i+4]=(device & 1)?2:0;          
+		trits[i+4]=(device & 1)?2:0;
 		device>>=1;
-    }
-	
+	}
+
 	// Trits 8-10 seem to be fixed
 	trits[8]=0;
 	trits[9]=2;
 	trits[10]=2;
-	
+
 	// Switch on or off
 	trits[11]=(on?2:0);
-	
+
 	return encodeTelegram(trits);
 }
 
@@ -233,38 +233,38 @@ void KaKuTransmitter::sendSignal(char address, unsigned short group, unsigned sh
 
 unsigned long KaKuTransmitter::getTelegram(char address, unsigned short group, unsigned short device, boolean on) {
 	unsigned short trits[12], i;
-	
+
 	address-=65;
 	group-=1;
 	device-=1;
-	
+
 	// Address. M3E Pin A0-A3
 	for (i=0; i<4; i++) {
 		// Trits 0-3 contain address (2^4 = 16 addresses)
-		trits[i]=(address & 1)?2:0;          
-		address>>=1;		
-    }
-		
+		trits[i]=(address & 1)?2:0;
+		address>>=1;
+	}
+
 	// Device. M3E Pin A4-A5
 	for (; i<6; i++) {
-		trits[i]=(device & 1)?2:0;          
+		trits[i]=(device & 1)?2:0;
 		device>>=1;
 	}
-	
+
 	// Group. M3E Pin A6-A7
 	for (; i<8; i++) {
-		trits[i]=(group & 1)?2:0;          
+		trits[i]=(group & 1)?2:0;
 		group>>=1;
 	}
-	
+
 	// Trits 8-10 are be fixed. M3E Pin A8/D0-A10/D2
 	trits[8]=0;
 	trits[9]=2;
 	trits[10]=2;
-	
+
 	// Switch on or off, M3E Pin A11/D3
 	trits[11]=(on?2:0);
-	
+
 	return encodeTelegram(trits);
 }
 
@@ -293,7 +293,7 @@ unsigned long ElroTransmitter::getTelegram(unsigned short systemCode, char devic
 
 		//trits 5-9 contain device. Only one trit has value 0, others have 2 (float)!
 		trits[i+5]=(i==device?0:2);
-    }
+	}
 
 	//switch on or off
 	trits[10]=(on?0:2);

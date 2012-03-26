@@ -1,5 +1,5 @@
 /*
- * RemoteSwitch library v2.2.1 (20120314) made by Randy Simons http://randysimons.nl/
+ * RemoteSwitch library v3.0.0 DEV made by Randy Simons http://randysimons.nl/
  *
  * License: GPLv3. See license.txt
  */
@@ -7,11 +7,7 @@
 #ifndef NewKakuReceiver_h
 #define NewKakuReceiver_h
 
-#if (ARDUINO >= 100)
-    #include <Arduino.h>
-#else
-    #include <WProgram.h>
-#endif
+#include <Arduino.h>
 
 struct NewKakuCode {
     unsigned int period;

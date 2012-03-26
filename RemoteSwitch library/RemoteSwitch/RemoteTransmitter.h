@@ -1,5 +1,5 @@
 /*
- * RemoteSwitch library v2.2.1 (20120314) made by Randy Simons http://randysimons.nl/
+ * RemoteSwitch library v3.0.0 DEV made by Randy Simons http://randysimons.nl/
  *
  * License: GPLv3. See license.txt
  */
@@ -7,14 +7,10 @@
 #ifndef RemoteTransmitter_h
 #define RemoteTransmitter_h
 
-#if (ARDUINO >= 100)
-	#include <Arduino.h>
-#else
-	#include <WProgram.h>
-#endif
+#include <Arduino.h>
 
 /**
-* RemoteTransmitter provides a generic class for simulation of common RF remote controls, like the 'Klik aan Klik uit'-system 
+* RemoteTransmitter provides a generic class for simulation of common RF remote controls, like the 'Klik aan Klik uit'-system
 * (http://www.klikaanklikuit.nl/), used to remotely switch lights etc.
 *
 * Many of these remotes seem to use a 433MHz SAW resonator and one of these chips: LP801B,  HX2262, PT2262, M3E.
@@ -29,7 +25,7 @@
 * - Since these chips use (and send!) tri-state inputs (low, high and floating) I use 'trits' instead of 'bits',
 *   when appropriate.
 * - I measured the period lengths with a scope.  Thus: they work for my remotes, but may fail for yours...
-*   A better way would be to calculate the 'target'-timings using the datasheets and the resistor-values on the remotes. 
+*   A better way would be to calculate the 'target'-timings using the datasheets and the resistor-values on the remotes.
 */
 class RemoteTransmitter {
 	public:
@@ -42,9 +38,9 @@ class RemoteTransmitter {
 		* @param pin		output pin on Arduino to which the transmitter is connected
 		* @param periodusec	[0..511] Duration of one period, in microseconds. A trit is 6 periods.
 		* @param repeats	[0..7] The 2log-Number of times the signal is repeated. The actual number of repeats will be 2^repeats. 2 would be bare minimum, 4 seems robust.
-		*/		
+		*/
 		RemoteTransmitter(unsigned short pin, unsigned int periodusec, unsigned short repeats);
-		
+
 		/**
 		* Encodes the data base on the current object and the given trits. The data can be reused, e.g.
 		* for use with the static version of sendTelegram, so you won't need to instantiate costly objects!
@@ -52,14 +48,14 @@ class RemoteTransmitter {
 		* @return The data suited for use with RemoteTransmitter::sendTelegram.
 		*/
 		unsigned long encodeTelegram(unsigned short trits[]);
-		
+
 		/**
 		* Send a telegram, including synchronisation-part.
 		*
 		* @param trits	Array of size 12. "trits" should be either 0, 1 or 2, where 2 indicaties "float"
 		*/
 		void sendTelegram(unsigned short trits[]);
-		
+
 		/**
 		* Send a telegram, including synchronisation-part. The data-param encodes the period duration, number of repeats and the actual data.
 		* Note: static method, which allows for use in low-mem situations.
@@ -74,7 +70,7 @@ class RemoteTransmitter {
 		* @param pin Pin number of the transmitter.
 		*/
 		static void sendTelegram(unsigned long data, unsigned short pin);
-		
+
 		/**
 		* The complement of RemoteReceiver.	Send a telegram with specified code as data.
 		*
@@ -84,9 +80,9 @@ class RemoteTransmitter {
 		* @param periodusec	[0..511] Duration of one period, in microseconds. A trit is 6 periods.
 		* @param repeats	[0..7] The 2log-Number of times the signal is repeated. The actual number of repeats will be 2^repeats. 2 would be bare minimum, 4 seems robust.
 		* @param code		The code to transmit. Note: only the first 20 bits are used, the rest is ignored. Also see sendTelegram.
-		*/		
+		*/
 		static void sendCode(unsigned short pin, unsigned long code, unsigned int periodusec, unsigned short repeats);
-		
+
 		/**
 		* Compares the data received with RemoteReceive with the data obtained by one of the getTelegram-functions.
 		* Period duration and repetitions are ignored by this function; only the data-payload is compared.
@@ -94,11 +90,11 @@ class RemoteTransmitter {
 		* @return true, if the codes are identical (the 20 least significant bits match)
 		*/
 		static boolean isSameCode(unsigned long encodedTelegram, unsigned long receivedData);
-		
+
 	protected:
 		unsigned short _pin;		// Transmitter output pin
 		unsigned int _periodusec;	// Oscillator period in microseconds
-		unsigned short _repeats;	// Number over repetitions of one telegram	
+		unsigned short _repeats;	// Number over repetitions of one telegram
 };
 
 /**
@@ -117,7 +113,7 @@ class ActionTransmitter: RemoteTransmitter {
 		* @see RemoteTransmitter
 		*/
 		ActionTransmitter(unsigned short pin, unsigned int periodusec=190, unsigned short repeats=4);
-		
+
 		/**
 		* Send a on or off signal to a device.
 		*
@@ -126,7 +122,7 @@ class ActionTransmitter: RemoteTransmitter {
 		* @param on	True, to switch on. False to switch off,
 		*/
 		void sendSignal(unsigned short systemCode, char device, boolean on);
-		
+
 		/**
 		* Generates the telegram (data) which can be used for RemoteTransmitter::sendTelegram.
 		* See sendSignal for details on the parameters
@@ -152,15 +148,15 @@ class BlokkerTransmitter: RemoteTransmitter {
 		* @see RemoteTransmitter
 		*/
 		BlokkerTransmitter(unsigned short pin, unsigned int periodusec=230, unsigned short repeats=4);
-		
+
 		/**
 		* Send a on or off signal to a device.
-		*		
+		*
 		* @param device	Device to switch. Range: [1..8]
 		* @param on	True, to switch on. False to switch off,
 		*/
 		void sendSignal(unsigned short device, boolean on);
-		
+
 		/**
 		* @see RemoteTransmitter::getTelegram
 		*/
@@ -182,7 +178,7 @@ class KaKuTransmitter: RemoteTransmitter {
 		* @see RemoteTransmitter
 		*/
 		KaKuTransmitter(unsigned short pin, unsigned int periodusec=375, unsigned short repeats=4);
-		
+
 		/**
 		* Send a on or off signal to a device.
 		*
@@ -192,7 +188,7 @@ class KaKuTransmitter: RemoteTransmitter {
 		* @param on	True, to switch on. False to switch off,
 		*/
 		void sendSignal(char address, unsigned short group, unsigned short device, boolean on);
-		
+
 		/**
 		* Send a on or off signal to a device.
 		*
@@ -201,12 +197,12 @@ class KaKuTransmitter: RemoteTransmitter {
 		* @param on	True, to switch on. False to switch off,
 		*/
 		void sendSignal(char address, unsigned short device, boolean on);
-		
+
 		/**
 		* @see RemoteTransmitter::getTelegram
 		*/
 		unsigned long getTelegram(char address, unsigned short group, unsigned short device, boolean on);
-		
+
 		/**
 		* @see RemoteTransmitter::getTelegram
 		*/

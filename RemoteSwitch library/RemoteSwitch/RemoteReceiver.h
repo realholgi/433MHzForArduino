@@ -1,5 +1,5 @@
-/* 
- * RemoteSwitch library v2.2.1 (20120314) made by Randy Simons http://randysimons.nl/
+/*
+ * RemoteSwitch library v3.0.0 DEV made by Randy Simons http://randysimons.nl/
  *
  * License: GPLv3. See license.txt
  */
@@ -7,11 +7,7 @@
 #ifndef RemoteReceiver_h
 #define RemoteReceiver_h
 
-#if (ARDUINO >= 100)
-	#include <Arduino.h>
-#else
-	#include <WProgram.h>
-#endif
+#include <Arduino.h>
 
 typedef void (*RemoteReceiverCallBack)(unsigned long, unsigned int);
 
@@ -35,7 +31,7 @@ class RemoteReceiver {
 	public:
 		/**
 		* Initializes the decoder.
-		* 
+		*
 		* If interrupt >= 0, init will register pin <interrupt> to this library.
 		* If interrupt < 0, no interrupt is registered. In that case, you have to call interruptHandler()
 		* yourself whenever the output of the receiver changes, or you can use InterruptChain.
@@ -46,17 +42,17 @@ class RemoteReceiver {
 		* @param callback Pointer to a callback function, with signature void (*func)(unsigned long, unsigned int). First parameter is the decoded data, the second the period of the timing.
 		*/
 		static void init(short interrupt, unsigned short minRepeats, RemoteReceiverCallBack callback);
-		
+
 		/**
 		* Enable decoding. No need to call enable() after init().
 		*/
 		static void enable();
-		
+
 		/**
 		* Disable decoding. You can re-enable decoding by calling enable();
 		*/
 		static void disable();
-		
+
 		/**
 		* Tells wether a signal is being received. If a compatible signal is detected within the time out, isReceiving returns true.
 		* Since it makes no sense to transmit while another transmitter is active, it's best to wait for isReceiving() to false.
@@ -64,23 +60,23 @@ class RemoteReceiver {
 		*
 		* Note: isReceiving() depends on interrupts enabled. Thus, when disabled()'ed, or when interrupts are disabled (as is
 		* the case in the callback), isReceiving() will not work properly.
-		*		
+		*
 		* @param waitMillis number of milliseconds to monitor for signal.
 		* @return boolean If after waitMillis no signal was being processed, returns false. If before expiration a signal was being processed, returns true.
 		*/
 		static boolean isReceiving(int waitMillis = 150);
-				
+
 		static void interruptHandler();
-		
+
 	private:
-	
+
 		static unsigned short _interrupt;			// Radio input interrupt
 		volatile static unsigned short _state;		// State of decoding process. There are 49 states, 1 for "waiting for signal" and 48 for decoding the 48 edges in a valid code.
 		static unsigned short _minRepeats;
 		static RemoteReceiverCallBack _callback;
 		static boolean _inCallback;					// When true, the callback function is being executed; prevents re-entrance.
 		static boolean _enabled;					// If true, monitoring and decoding is enabled. If false, interruptHandler will return immediately.
-		
+
 };
 
 #endif
