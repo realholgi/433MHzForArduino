@@ -20,7 +20,6 @@ void setup() {
   // See the interrupt-parameter of attachInterrupt for possible values (and pins)
   // to connect the receiver.
   NewKakuReceiver::init(0, 2, showCode);
-  pinMode(13, OUTPUT);
 }
 
 void loop() {
