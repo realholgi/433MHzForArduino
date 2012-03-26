@@ -152,15 +152,14 @@ void NewKakuReceiver::interruptHandler() {
             // dim, short shot short shot == B0000.
             // Everything else: inconsistent data, trash the whole sequence.
 
-            receivedBit &= B1111; // Only 4 LSB's are used; trim the rest.
 
             if (_state < 106) {
                 // States 2 - 105 are address bit states
 
                 receivedCode.address <<= 1;
 
-                // Decode bit.
-                switch (receivedBit) {
+                // Decode bit. Only 4 LSB's of receivedBit are used; trim the rest.
+                switch (receivedBit & B1111) {
                     case B0001: // Bit "0" received.
                         // receivedCode.address |= 0; But let's not do that, as it is wasteful.
                         break;
@@ -173,7 +172,7 @@ void NewKakuReceiver::interruptHandler() {
                 }
             } else if (_state < 110) {
                 // States 106 - 109 are group bit states.
-                switch (receivedBit) {
+                switch (receivedBit & B1111) {
                     case B0001: // Bit "0" received.
                         receivedCode.groupMode = false;
                         break;
@@ -186,7 +185,7 @@ void NewKakuReceiver::interruptHandler() {
                 }
             } else if (_state < 114) {
                 // States 110 - 113 are switch bit states.
-                switch (receivedBit) {
+                switch (receivedBit & B1111) {
                     case B0001: // Bit "0" received.
                         receivedCode.switchType = 0;
                         break;
@@ -205,7 +204,7 @@ void NewKakuReceiver::interruptHandler() {
                 receivedCode.unit <<= 1;
 
                 // Decode bit.
-                switch (receivedBit) {
+                switch (receivedBit & B1111) {
                     case B0001: // Bit "0" received.
                         // receivedCode.unit |= 0; But let's not do that, as it is wasteful.
                         break;

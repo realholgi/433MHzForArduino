@@ -50,12 +50,30 @@ void RemoteReceiver::interruptHandler() {
 	static unsigned long receivedCode;		// Contains received code
 	static unsigned long previousCode;		// Contains previous received code
 	static unsigned short repeats = 0;		// The number of times the an identical code is received in a row.
-	static unsigned long lastChange = 0;	// Timestamp of previous edge
+	static unsigned long edgeTimeStamp[3] = {0, };	// Timestamp of edges
 	static unsigned int min1Period, max1Period, min3Period, max3Period;
+	static bool skip;
 
-	unsigned long currentTime=micros();
-	unsigned int duration=currentTime-lastChange; // Duration = Time between edges
-	lastChange=currentTime;
+	// Filter out too short pulses. This method works as a low pass filter.
+	edgeTimeStamp[1] = edgeTimeStamp[2];
+	edgeTimeStamp[2] = micros();
+
+	if (skip) {
+		skip = false;
+		return;
+	}
+
+	if (_state >= 0 && edgeTimeStamp[2]-edgeTimeStamp[1] < min1Period) {
+		// Last edge was too short.
+		// Skip this edge, and the next too.
+		skip = true;
+		return;
+	}
+
+	unsigned int duration = edgeTimeStamp[1] - edgeTimeStamp[0];
+	edgeTimeStamp[0] = edgeTimeStamp[1];
+
+	// Note that if state>=0, duration is always >= 1 period.
 
 	if (_state==-1) { // Waiting for sync-signal
 		if (duration>3720) { // =31*120 minimal time between two edges before decoding starts.
@@ -73,12 +91,14 @@ void RemoteReceiver::interruptHandler() {
 			return;
 		}
 	} else if (_state<48) { // Decoding message
+		receivedBit <<= 1;
+
 		// bit part durations can ONLY be 1 or 3 periods.
-		if (duration>=min1Period && duration<=max1Period) {
-			bitClear(receivedBit,_state%4); // Note: this sets the bits in reversed order! Correct order would be: 3-(_state%4), but that's overhead we don't want.
+		if (duration<=max1Period) {
+			receivedBit &= B1110; // Clear LSB of receivedBit
 		}
 		else if (duration>=min3Period && duration<=max3Period) {
-			bitSet(receivedBit,_state%4); // Note: this sets the bits in reversed order!
+			receivedBit |= B1; // Set LSB of receivedBit
 		}
 		else { // Otherwise the entire sequence is invalid
 			_state=-1;
@@ -88,28 +108,30 @@ void RemoteReceiver::interruptHandler() {
 		if ((_state%4)==3) { // Last bit part?
 			// Shift
 			receivedCode*=3;
-			// Decode bit.
-			if (receivedBit==B1010) {  // short long short long == B0101, but bits are set in reversed order, so compare to B1010
-				// bit "0" received
-				receivedCode+=0; // I hope the optimizer handles this ;)
-			}
-			else if (receivedBit==B0101) { // long short long short == B101, but bits are set in reversed order, so compare to B0101
-				// bit "1" received
-				receivedCode+=1;
-			}
-			else if (receivedBit==B0110) { // short long long short. Reversed too, but makes no difference.
-				// bit "f" received
-				receivedCode+=2;
-			}
-			else {
-				// Bit was rubbish. Abort.
-				_state=-1;
-				return;
+
+			// Only 4 LSB's are used; trim the rest.
+			switch (receivedBit & B1111) {
+				case B0101: // short long short long == B0101
+					// bit "0" received
+					receivedCode+=0; // I hope the optimizer handles this ;)
+					break;
+				case B1010: // long short long short == B1010
+					// bit "1" received
+					receivedCode+=1;
+					break;
+				case B0110: // short long long short
+					// bit "f" received
+					receivedCode+=2;
+					break;
+				default:
+					// Bit was rubbish. Abort.
+					_state=-1;
+					return;
 			}
 		}
 	} else if (_state==48) { // Waiting for sync bit part 1
 		// Must be 1 period.
-		if (duration<min1Period || duration>max1Period) {
+		if (duration>max1Period) {
 			_state=-1;
 			return;
 		}
