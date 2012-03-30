@@ -17,7 +17,8 @@ Installation of library:
    <arduinodir>/libraries/)
  
 Default installation sender & demo:
- - Connect tha data-in-pin of a 433MHz transmitter to digital pin 11. See photo.
+ - Connect tha data-in-pin of a 433MHz transmitter to digital pin 11. See 
+   docs/hardware setup.jpg.
    (Note: your hardware may have a different pin configuration!)
  - Start Arduino, and open the example: File -> Examples -> RemoteSwitch ->
    LightShow

@@ -10,7 +10,7 @@ Cresta is just a brandname. The original OEM seems to be Hideki Electronics.
 There are other brands which use the same hardware and / or protocol. As far
 as I know these include Mebus, Irox, Honeywell, Cresta and RST.
 
-This software is based on the work of Oopsje. See CrestaProtocol.pdf
+This software is based on the work of Oopsje. See docs/CrestaProtocol.pdf
 
 See SensorTransmitter.h and SensorReciver.h for details!
 
@@ -25,7 +25,8 @@ Installation of library:
    <arduinodir>/libraries/)
  
 Default installation sender & demo:
- - Connect tha data-in-pin of a 433MHz transmitter to digital pin 11. See photo.
+ - Connect tha data-in-pin of a 433MHz transmitter to digital pin 11. See 
+   docs/hardware setup.jpg.
    (Note: your hardware may have a different pin configuration!)
  - Start Arduino, and open the example: File -> Examples -> RemoteSensor ->
    ThermoHygroTransmitter
