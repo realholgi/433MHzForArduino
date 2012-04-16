@@ -29,6 +29,7 @@ A full frame looks like this:
 - 26 bit:  Address
 - 1  bit:  group bit
 - 1  bit:  on/off/[dim]
+- 4  bit:  unit
 - [4 bit:  dim level. Only present of [dim] is chosen]
 - stop pulse: 1T high, 40T low
 

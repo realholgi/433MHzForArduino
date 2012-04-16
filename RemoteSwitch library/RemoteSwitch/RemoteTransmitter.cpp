@@ -59,6 +59,8 @@ void RemoteTransmitter::sendTelegram(unsigned long data, unsigned short pin) {
 void RemoteTransmitter::sendCode(unsigned short pin, unsigned long code, unsigned int periodusec, unsigned short repeats) {
 	code &= 0xfffff; // Truncate to 20 bit ;
 	// Convert the base3-code to base4, to avoid lengthy calculations when transmitting.. Messes op timings.
+	// Also note this swaps endianess in the process. The MSB must be transmitted first, but is converted to
+	// LSB here. This is easier when actually transmitting later on.
 	unsigned long dataBase4 = 0;
 
 	for (unsigned short i=0; i<12; i++) {

@@ -9,8 +9,8 @@ but with slightly different timings, as measured on my device.
         _   _
 'dim': | |_| |_     (T,T,T,T)
 
-T = short period of ~260µs. However, this code tries
-to figure out the correct period
+T = short period of ~260µs. Use the ShowReceivedCodeNewKaku example to find the
+actual period length for your devices.
 
 A full frame looks like this:
 
@@ -18,5 +18,6 @@ A full frame looks like this:
 - 26 bit:  Address
 - 1  bit:  group bit
 - 1  bit:  on/off/[dim]
+- 4  bit:  unit
 - [4 bit:  dim level. Only present of [dim] is chosen]
 - stop pulse: 1T high, 40T low
