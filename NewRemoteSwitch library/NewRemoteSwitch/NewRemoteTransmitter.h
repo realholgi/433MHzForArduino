@@ -42,10 +42,27 @@ class NewRemoteTransmitter {
 		*/
 		NewRemoteTransmitter(unsigned long address, unsigned short pin, unsigned int periodusec = 260, unsigned short repeats = 4);
 
+		/**
+		 * Send on/off command to the address group.
+		 *
+		 * @param switchOn  True to send "on" signal, false to send "off" signal.
+		 */
 		void sendGroup(boolean switchOn);
 
+		/**
+		 * Send on/off command to an unit on the current address.
+		 *
+		 * @param unit      [0-15] target unit.
+		 * @param switchOn  True to send "on" signal, false to send "off" signal.
+		 */
 		void sendUnit(unsigned short unit, boolean switchOn);
 
+		/**
+		 * Send dim value to an unit on the current address.
+		 *
+		 * @param unit      [0-15] target unit.
+		 * @param dimLevel  [0-15] Dim level. 0 for off, 15 for brightest level.
+		 */
 		void sendDim(unsigned short unit, unsigned short dimLevel);
 
 	protected:
@@ -54,14 +71,33 @@ class NewRemoteTransmitter {
 		unsigned int _periodusec;	// Oscillator period in microseconds
 		unsigned short _repeats;	// Number over repetitions of one telegram
 
+		/**
+		 * Transmits start-pulse
+		 */
 		void _sendStartPulse();
 
+		/**
+		 * Transmits address part
+		 */
 		void _sendAddress();
 
+		/**
+		 * Transmits unit part.
+		 *
+		 * @param unit      [0-15] target unit.
+		 */
 		void _sendUnit(unsigned short unit);
 
+		/**
+		 * Transmits stop pulse.
+		 */
 		void _sendStopPulse();
 
+		/**
+		 * Transmits a single bit.
+		 *
+		 * @param isBitOne	True, to send '1', false to send '0'.
+		 */
 		void _sendBit(boolean isBitOne);
 };
 #endif

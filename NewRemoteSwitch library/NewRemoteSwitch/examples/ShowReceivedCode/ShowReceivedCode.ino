@@ -33,7 +33,7 @@ void showCode(NewRemoteCode receivedCode) {
   Serial.print("Addr ");
   Serial.print(receivedCode.address);
   
-  if (receivedCode.groupMode) {
+  if (receivedCode.groupBit) {
     Serial.print(" group");
   } else {
     Serial.print(" unit ");

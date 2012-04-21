@@ -175,10 +175,10 @@ void NewRemoteReceiver::interruptHandler() {
 				// States 106 - 109 are group bit states.
 				switch (receivedBit & B1111) {
 					case B0001: // Bit "0" received.
-						receivedCode.groupMode = false;
+						receivedCode.groupBit = false;
 						break;
 					case B0100: // Bit "1" received.
-						receivedCode.groupMode = true;
+						receivedCode.groupBit = true;
 						break;
 					default: // Bit was invalid. Abort.
 						_state = -1;
@@ -259,7 +259,7 @@ void NewRemoteReceiver::interruptHandler() {
 				receivedCode.address != previousCode.address ||
 				receivedCode.unit != previousCode.unit ||
 				receivedCode.dimLevel != previousCode.dimLevel ||
-				receivedCode.groupMode != previousCode.groupMode ||
+				receivedCode.groupBit != previousCode.groupBit ||
 				receivedCode.switchType != previousCode.switchType
 			) { // memcmp isn't deemed safe
 			repeats=0;
