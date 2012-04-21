@@ -1,15 +1,15 @@
 /*
- * RemoteSwitch library v3.0.0 DEV made by Randy Simons http://randysimons.nl/
- * See NewKakuReceiver.h for details.
+ * NewRemoteSwitch library v1.0.0 DEV made by Randy Simons http://randysimons.nl/
+ * See NewRemoteReceiver.h for details.
  *
  * License: GPLv3. See license.txt
  */
 
-#include "NewKakuReceiver.h"
+#include "NewRemoteReceiver.h"
 
 
 /************
-* NewKakuReceiver
+* NewRemoteReceiver
 
 Protocol. (Copied from Wieltje, http://www.circuitsonline.net/forum/view/message/1181410#1181410,
 but with slightly different timings, as measured on my device.)
@@ -35,14 +35,14 @@ A full frame looks like this:
 
 ************/
 
-unsigned short NewKakuReceiver::_interrupt;
-volatile unsigned short NewKakuReceiver::_state;
-unsigned short NewKakuReceiver::_minRepeats;
-NewKakuReceiverCallBack NewKakuReceiver::_callback;
-boolean NewKakuReceiver::_inCallback = false;
-boolean NewKakuReceiver::_enabled = false;
+unsigned short NewRemoteReceiver::_interrupt;
+volatile unsigned short NewRemoteReceiver::_state;
+unsigned short NewRemoteReceiver::_minRepeats;
+NewRemoteReceiverCallBack NewRemoteReceiver::_callback;
+boolean NewRemoteReceiver::_inCallback = false;
+boolean NewRemoteReceiver::_enabled = false;
 
-void NewKakuReceiver::init(short interrupt, unsigned short minRepeats, NewKakuReceiverCallBack callback) {
+void NewRemoteReceiver::init(short interrupt, unsigned short minRepeats, NewRemoteReceiverCallBack callback) {
 	_interrupt = interrupt;
 	_minRepeats = minRepeats;
 	_callback = callback;
@@ -53,24 +53,24 @@ void NewKakuReceiver::init(short interrupt, unsigned short minRepeats, NewKakuRe
 	}
 }
 
-void NewKakuReceiver::enable() {
+void NewRemoteReceiver::enable() {
 	_state = -1;
 	_enabled = true;
 }
 
-void NewKakuReceiver::disable() {
+void NewRemoteReceiver::disable() {
 	_enabled = false;
 }
 
 
-void NewKakuReceiver::interruptHandler() {
+void NewRemoteReceiver::interruptHandler() {
 	if (!_enabled) {
 		return;
 	}
 
 	static unsigned short receivedBit;		// Contains "bit" currently receiving
-	static NewKakuCode receivedCode;		// Contains received code
-	static NewKakuCode previousCode;		// Contains previous received code
+	static NewRemoteCode receivedCode;		// Contains received code
+	static NewRemoteCode previousCode;		// Contains previous received code
 	static unsigned short repeats = 0;		// The number of times the an identical code is received in a row.
 	static unsigned long edgeTimeStamp[3] = {0, };	// Timestamp of edges
 	static unsigned int min1Period, max1Period, min5Period, max5Period;
@@ -288,7 +288,7 @@ void NewKakuReceiver::interruptHandler() {
 	return;
 }
 
-boolean NewKakuReceiver::isReceiving(int waitMillis) {
+boolean NewRemoteReceiver::isReceiving(int waitMillis) {
 	unsigned long startTime=millis();
 
 	int waited; // Signed int!

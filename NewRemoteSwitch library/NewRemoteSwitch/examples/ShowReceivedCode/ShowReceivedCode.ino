@@ -2,13 +2,13 @@
 * Demo for RF remote switch receiver. 
 * This example is for the new KaKu / Home Easy type of remotes!
 
-* For details, see NewKakuReceiver.h!
+* For details, see NewRemoteReceiver.h!
 *
 * This sketch shows the received signals on the serial port.
 * Connect the receiver to digital pin 2.
 */
 
-#include <NewKakuReceiver.h>
+#include <NewRemoteReceiver.h>
 
 void setup() {
   Serial.begin(115200);
@@ -19,14 +19,14 @@ void setup() {
   //
   // See the interrupt-parameter of attachInterrupt for possible values (and pins)
   // to connect the receiver.
-  NewKakuReceiver::init(0, 2, showCode);
+  NewRemoteReceiver::init(0, 2, showCode);
 }
 
 void loop() {
 }
 
 // Callback function is called only when a valid code is received.
-void showCode(NewKakuCode receivedCode) {
+void showCode(NewRemoteCode receivedCode) {
   // Note: interrupts are disabled. You can re-enable them if needed.
   
   // Print the received code.

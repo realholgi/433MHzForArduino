@@ -1,8 +1,14 @@
-RemoteSwitch library v3.0.0 DEV for Arduino 1.0
+RemoteSwitch library v2.3.0 DEV for Arduino 1.0
 Made by Randy Simons http://randysimons.nl/
 
 This library provides an easy class for Arduino, to send and receive signals
-used by some common 433MHz remote control switches
+used by some common "old style" 433MHz remote control switches.
+
+There are two styles of remote:
+ - "old style", which uses switches or a dial to set the house code. Use this
+   library.
+ - "new style", which use a button on the receivers to "learn" a signal. Use
+   the NewRemoteSwitch library instead.
 
 See RemoteTransmitter.h and RemoteReceiver.h for details!
 
@@ -28,7 +34,7 @@ Default installation sender & demo:
 
 Default installation receiver & demo:
  - Connect the data-out-pin of a 433MHz receiver to digital pin 2. See photo.
-  (Note: your hardware may have a different pin configuration!)
+   (Note: your hardware may have a different pin configuration!)
  - Start Arduino, and open the example: File -> Examples -> RemoteSwitch ->
    ShowReceivedCode or ShowReceivedCodeNewKaku, depending on your remote.
  - Compile, upload and run
@@ -42,9 +48,7 @@ Notes:
 
 
 Changelog:
-RemoteSwitch library v3.0.0 DEV for Arduino 1.0
- - Support for receiving A-series Klik-aan-klik-uit remote. (NewKakuReceiver)
- - Added RemoteSwitch/ShowReceivedCodeNewKaku example to demonstrate.
+RemoteSwitch library v2.3.0 DEV for Arduino 1.0
  - Improved reception quality by filtering too short pulses.
  - Dropped pre-v1.0 Arduino support.
 

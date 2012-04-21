@@ -1,15 +1,15 @@
 /*
- * RemoteSwitch library v3.0.0 DEV made by Randy Simons http://randysimons.nl/
+ * NewRemoteSwitch library v1.0.0 DEV made by Randy Simons http://randysimons.nl/
  *
  * License: GPLv3. See license.txt
  */
 
-#ifndef NewKakuReceiver_h
-#define NewKakuReceiver_h
+#ifndef NewRemoteReceiver_h
+#define NewRemoteReceiver_h
 
 #include <Arduino.h>
 
-struct NewKakuCode {
+struct NewRemoteCode {
     unsigned int period;
     unsigned long address;
     boolean groupMode;
@@ -18,17 +18,17 @@ struct NewKakuCode {
     unsigned short dimLevel;
 };
 
-typedef void (*NewKakuReceiverCallBack)(NewKakuCode);
+typedef void (*NewRemoteReceiverCallBack)(NewRemoteCode);
 
 /**
 * See RemoteSwitch for introduction.
 *
-* NewKakuReceiver decodes the signal received from a 433MHz-receiver, like the "KlikAanKlikUit"-system
+* NewRemoteReceiver decodes the signal received from a 433MHz-receiver, like the "KlikAanKlikUit"-system
 * as well as the signal sent by the RemoteSwtich class. When a correct signal is received,
 * a user-defined callback function is called.
 *
 * Note that in the callback function, the interrupts are still disabled. You can enabled them, if needed.
-* A call to the callback must b finished before NewKakuReceiver will call the callback function again, thus
+* A call to the callback must b finished before NewRemoteReceiver will call the callback function again, thus
 * there is no re-entrant problem.
 *
 * When sending your own code using RemoteSwich, disable() the receiver first.
@@ -36,7 +36,7 @@ typedef void (*NewKakuReceiverCallBack)(NewKakuCode);
 * This is a pure static class, for simplicity and to limit memory-use.
 */
 
-class NewKakuReceiver {
+class NewRemoteReceiver {
     public:
         /**
         * Initializes the decoder.
@@ -50,7 +50,7 @@ class NewKakuReceiver {
         * @param minRepeats The number of times the same code must be received in a row before the callback is calles
         * @param callback Pointer to a callback function, with signature void (*func)(unsigned long, bool, unsigned short, unsigned short, unsigned short)
         */
-        static void init(short interrupt, unsigned short minRepeats, NewKakuReceiverCallBack callback);
+        static void init(short interrupt, unsigned short minRepeats, NewRemoteReceiverCallBack callback);
 
         /**
         * Enable decoding. No need to call enable() after init().
@@ -82,7 +82,7 @@ class NewKakuReceiver {
         static unsigned short _interrupt;			// Radio input interrupt
         volatile static unsigned short _state;		// State of decoding process. There are 49 states, 1 for "waiting for signal" and 48 for decoding the 48 edges in a valid code.
         static unsigned short _minRepeats;
-        static NewKakuReceiverCallBack _callback;
+        static NewRemoteReceiverCallBack _callback;
         static boolean _inCallback;					// When true, the callback function is being executed; prevents re-entrance.
         static boolean _enabled;					// If true, monitoring and decoding is enabled. If false, interruptHandler will return immediately.
 

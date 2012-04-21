@@ -9,7 +9,7 @@ but with slightly different timings, as measured on my device.
         _   _
 'dim': | |_| |_     (T,T,T,T)
 
-T = short period of ~260µs. Use the ShowReceivedCodeNewKaku example to find the
+T = short period of ~260µs. Use the ShowReceivedCodeNewRemote example to find the
 actual period length for your devices.
 
 A full frame looks like this:
