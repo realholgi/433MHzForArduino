@@ -54,6 +54,12 @@ class RemoteReceiver {
 		static void disable();
 
 		/**
+		* Deinitializes the decoder. Disables decoding and detaches the interrupt handler. If you want to
+		* re-enable decoding, call init() again.
+		*/
+		static void deinit();
+
+		/**
 		* Tells wether a signal is being received. If a compatible signal is detected within the time out, isReceiving returns true.
 		* Since it makes no sense to transmit while another transmitter is active, it's best to wait for isReceiving() to false.
 		* By default it waits for 150ms, in which a (relative slow) KaKu signal can be broadcasted three times.

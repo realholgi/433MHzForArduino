@@ -62,6 +62,12 @@ void NewRemoteReceiver::disable() {
 	_enabled = false;
 }
 
+void NewRemoteReceiver::deinit() {
+	_enabled = false;
+	if (_interrupt >= 0) {
+		detachInterrupt(_interrupt);
+	}
+}
 
 void NewRemoteReceiver::interruptHandler() {
 	if (!_enabled) {

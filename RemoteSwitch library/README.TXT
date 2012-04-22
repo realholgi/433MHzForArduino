@@ -51,6 +51,7 @@ Changelog:
 RemoteSwitch library v2.3.0 DEV for Arduino 1.0
  - Improved reception quality by filtering too short pulses.
  - Dropped pre-v1.0 Arduino support.
+ - Added RemoteReceiver::deinit()
 
 RemoteSwitch library v2.2.1 (20120314) for Arduino 0022/1.0
  - Fixed Elro code, it caused memory corruption.

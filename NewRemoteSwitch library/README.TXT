@@ -33,6 +33,6 @@ Default installation demo:
 Changelog:
 NewRemoteSwitch library v1.0.0 DEV for Arduino 1.0
  - Support for receiving A-series Klik-aan-klik-uit remote. (NewRemoteReceiver)
- - Added NewRemoteSwitch/ShowReceivedCode example to demonstrate.
+ - With examples to test and demonstrate.
  
  Note: the NewRemote classes might work on other devices as well, such as HomeEasy.
