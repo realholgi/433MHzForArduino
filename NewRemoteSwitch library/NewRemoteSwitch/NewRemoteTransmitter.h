@@ -38,7 +38,7 @@ class NewRemoteTransmitter {
 		* @param address	Address of this transmitter [0..2^26-1] Duplicate the address of your hardware, or choose a random number.
 		* @param pin		Output pin on Arduino to which the transmitter is connected
 		* @param periodusec	Duration of one period, in microseconds. One bit takes 8 periods (but only 4 for 'dim' signal).
-		* @param repeats	The 2log-Number of times the signal is repeated. The actual number of repeats will be 2^repeats. 2 would be bare minimum, 4 seems robust.
+		* @param repeats	[0..8] The 2log-Number of times the signal is repeated. The actual number of repeats will be 2^repeats. 2 would be bare minimum, 4 seems robust, 8 is maximum (and overkill).
 		*/
 		NewRemoteTransmitter(unsigned long address, unsigned short pin, unsigned int periodusec = 260, unsigned short repeats = 4);
 
@@ -52,7 +52,7 @@ class NewRemoteTransmitter {
 		/**
 		 * Send on/off command to an unit on the current address.
 		 *
-		 * @param unit      [0-15] target unit.
+		 * @param unit      [0..15] target unit.
 		 * @param switchOn  True to send "on" signal, false to send "off" signal.
 		 */
 		void sendUnit(unsigned short unit, boolean switchOn);
@@ -60,8 +60,8 @@ class NewRemoteTransmitter {
 		/**
 		 * Send dim value to an unit on the current address.
 		 *
-		 * @param unit      [0-15] target unit.
-		 * @param dimLevel  [0-15] Dim level. 0 for off, 15 for brightest level.
+		 * @param unit      [0..15] target unit.
+		 * @param dimLevel  [0..15] Dim level. 0 for off, 15 for brightest level.
 		 */
 		void sendDim(unsigned short unit, unsigned short dimLevel);
 

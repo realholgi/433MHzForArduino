@@ -12,70 +12,75 @@ NewRemoteTransmitter::NewRemoteTransmitter(unsigned long address, unsigned short
 	_address = address;
 	_pin = pin;
 	_periodusec = periodusec;
-	_repeats = repeats;
+	_repeats = (1 << repeats) - 1; // I.e. _repeats = 2^repeats - 1
 
 	pinMode(_pin, OUTPUT);
 }
 
 void NewRemoteTransmitter::sendGroup(boolean switchOn) {
-	_sendStartPulse();
+	for (int i = _repeats; i >= 0; i--) {
+		_sendStartPulse();
 
-	_sendAddress();
+		_sendAddress();
 
-	// Do send group bit
-	_sendBit(true);
+		// Do send group bit
+		_sendBit(true);
 
-	// Switch on | off
-	_sendBit(switchOn);
+		// Switch on | off
+		_sendBit(switchOn);
 
-	// No unit. Is this actually ignored?..
-	_sendUnit(0);
+		// No unit. Is this actually ignored?..
+		_sendUnit(0);
 
-	_sendStopPulse();
+		_sendStopPulse();
+	}
 }
 
 void NewRemoteTransmitter::sendUnit(unsigned short unit, boolean switchOn) {
-	_sendStartPulse();
+	for (int i = _repeats; i >= 0; i--) {
+		_sendStartPulse();
 
-	_sendAddress();
+		_sendAddress();
 
-	// No group bit
-	_sendBit(false);
+		// No group bit
+		_sendBit(false);
 
-	// Switch on | off
-	_sendBit(switchOn);
+		// Switch on | off
+		_sendBit(switchOn);
 
-	_sendUnit(unit);
+		_sendUnit(unit);
 
-	_sendStopPulse();
+		_sendStopPulse();
+	}
 }
 
 void NewRemoteTransmitter::sendDim(unsigned short unit, unsigned short dimLevel) {
+	for (int i = _repeats; i >= 0; i--) {
+		_sendStartPulse();
 
-	_sendStartPulse();
+		_sendAddress();
 
-	_sendAddress();
+		// No group bit
+		_sendBit(false);
 
-	// No group bit
-	_sendBit(false);
+		// Switch type 'dim'
+		digitalWrite(_pin, HIGH);
+		delayMicroseconds(_periodusec);
+		digitalWrite(_pin, LOW);
+		delayMicroseconds(_periodusec);
+		digitalWrite(_pin, HIGH);
+		delayMicroseconds(_periodusec);
+		digitalWrite(_pin, LOW);
+		delayMicroseconds(_periodusec);
 
-	// Switch type 'dim'
-	digitalWrite(_pin, HIGH);
-	delayMicroseconds(_periodusec);
-	digitalWrite(_pin, LOW);
-	delayMicroseconds(_periodusec);
-	digitalWrite(_pin, HIGH);
-	delayMicroseconds(_periodusec);
-	digitalWrite(_pin, LOW);
-	delayMicroseconds(_periodusec);
+		_sendUnit(unit);
 
-	_sendUnit(unit);
+		for (short j=3; j>=0; j--) {
+		   _sendBit(dimLevel & 1<<j);
+		}
 
-	for (unsigned short i=3; i<=0; i--) {
-	   _sendBit(dimLevel & 1<<i);
+		_sendStopPulse();
 	}
-
-	_sendStopPulse();
 }
 
 void NewRemoteTransmitter::_sendStartPulse(){
@@ -86,13 +91,13 @@ void NewRemoteTransmitter::_sendStartPulse(){
 }
 
 void NewRemoteTransmitter::_sendAddress() {
-	for (unsigned short i=25; i<=0; i--) {
-	   _sendBit(_address & 1<<i);
+	for (short i=25; i>=0; i--) {
+	   _sendBit((_address >> i) & 1);
 	}
 }
 
 void NewRemoteTransmitter::_sendUnit(unsigned short unit) {
-	for (unsigned short i=3; i<=0; i--) {
+	for (short i=3; i>=0; i--) {
 	   _sendBit(unit & 1<<i);
 	}
 }
@@ -110,20 +115,20 @@ void NewRemoteTransmitter::_sendBit(boolean isBitOne) {
 		digitalWrite(_pin, HIGH);
 		delayMicroseconds(_periodusec);
 		digitalWrite(_pin, LOW);
-		delayMicroseconds(_periodusec);
+		delayMicroseconds(_periodusec * 5);
 		digitalWrite(_pin, HIGH);
 		delayMicroseconds(_periodusec);
 		digitalWrite(_pin, LOW);
-		delayMicroseconds(_periodusec * 5);
+		delayMicroseconds(_periodusec);
 	} else {
 		// Send '0'
 		digitalWrite(_pin, HIGH);
 		delayMicroseconds(_periodusec);
 		digitalWrite(_pin, LOW);
-		delayMicroseconds(_periodusec * 5);
+		delayMicroseconds(_periodusec);
 		digitalWrite(_pin, HIGH);
 		delayMicroseconds(_periodusec);
 		digitalWrite(_pin, LOW);
-		delayMicroseconds(_periodusec);
+		delayMicroseconds(_periodusec * 5);
 	}
 }

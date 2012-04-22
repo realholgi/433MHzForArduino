@@ -29,9 +29,9 @@ void retransmitter(NewRemoteCode receivedCode) {
   // Wait 5 seconds before sending.
   delay(5000);
 
-  // Create a new transmitter with the received address and period, use digital pin 11 as output pin, and repeat the signal 2^3=8 times
+  // Create a new transmitter with the received address and period, use digital pin 11 as output pin
 
-  NewRemoteTransmitter transmitter(receivedCode.address, 11, receivedCode.period, 3);
+  NewRemoteTransmitter transmitter(receivedCode.address, 11, receivedCode.period);
 
   // Switch type 0 = switch off, type 1 = switch on, type 2 = set dim level.
   if (receivedCode.switchType == 2) {
