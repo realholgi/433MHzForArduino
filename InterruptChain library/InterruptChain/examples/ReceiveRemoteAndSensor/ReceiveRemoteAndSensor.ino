@@ -8,16 +8,16 @@
  *
  * After uploading, enable the serial monitor at 115200 baud.
  * When you press buttons on a 433MHz remote control, as supported by 
- * RemoteSwitch, the code will be echoed. At the same time, if data
- * of a remote thermo/hygro-sensor is received, as supported by
- * RemoteSensor.
+ * RemoteSwitch or NewRemoteSwitch, the code will be echoed.
+ * At the same time, if data of a remote thermo/hygro-sensor is
+ * received, as supported by RemoteSensor, it will be echoed as well.
  *
  * Setup:
  * - connect a 433MHz receiver on digital pin 2.
  */
 
 #include <RemoteReceiver.h>
-#include <NewKakuReceiver.h>
+#include <NewRemoteReceiver.h>
 #include <SensorReceiver.h>
 #include <InterruptChain.h>
 
@@ -28,14 +28,14 @@ void setup() {
   RemoteReceiver::init(-1, 2, showOldCode);
   
   // Again, interrupt -1 to indicate you will call the interrupt handler with InterruptChain
-  NewKakuReceiver::init(-1, 2, showNewCode);
+  NewRemoteReceiver::init(-1, 2, showNewCode);
 
   // And once more, interrupt -1 to indicate you will call the interrupt handler with InterruptChain
   SensorReceiver::init(-1, showTempHumi);
 
   // On interrupt, call the interrupt handlers of remote and sensor receivers
   InterruptChain::addInterruptCallback(0, RemoteReceiver::interruptHandler);
-  InterruptChain::addInterruptCallback(0, NewKakuReceiver::interruptHandler);
+  InterruptChain::addInterruptCallback(0, NewRemoteReceiver::interruptHandler);
   InterruptChain::addInterruptCallback(0, SensorReceiver::interruptHandler);
 }
 
@@ -54,12 +54,12 @@ void showOldCode(unsigned long receivedCode, unsigned int period) {
 }
 
 // Shows the received code sent from an new-style remote switch
-void showNewCode(NewKakuCode receivedCode) {
+void showNewCode(NewRemoteCode receivedCode) {
   // Print the received code.
   Serial.print("Addr ");
   Serial.print(receivedCode.address);
   
-  if (receivedCode.groupMode) {
+  if (receivedCode.groupBit) {
     Serial.print(" group");
   } else {
     Serial.print(" unit ");
