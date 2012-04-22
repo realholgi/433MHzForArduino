@@ -1,4 +1,4 @@
-NewRemoteReceiver		KEYWORD1
+NewRemoteReceiver	KEYWORD1
 NewRemoteCode	KEYWORD1
 isReceiving	KEYWORD2
 init	KEYWORD2
