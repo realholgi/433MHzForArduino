@@ -1,5 +1,5 @@
 /*
- * RemoteSwitch library v3.0.0 DEV made by Randy Simons http://randysimons.nl/
+ * RemoteSwitch library v2.3.0 DEV made by Randy Simons http://randysimons.nl/
  * See RemoteTransmitter.h for details.
  *
  * License: GPLv3. See license.txt

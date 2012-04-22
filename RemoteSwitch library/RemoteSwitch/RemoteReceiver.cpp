@@ -1,5 +1,5 @@
 /*
- * RemoteSwitch library v3.0.0 DEV made by Randy Simons http://randysimons.nl/
+ * RemoteSwitch library v2.3.0 DEV made by Randy Simons http://randysimons.nl/
  * See RemoteReceiver.h for details.
  *
  * License: GPLv3. See license.txt
@@ -88,7 +88,7 @@ void RemoteReceiver::interruptHandler() {
 			receivedCode=previousCode=repeats=0;
 
 			// Allow for large error-margin. ElCheapo-hardware :(
-			min1Period=period*4/10; // void floating point math; saves memory.
+			min1Period=period*4/10; // Avoid floating point math; saves memory.
 			max1Period=period*16/10;
 			min3Period=period*23/10;
 			max3Period=period*37/10;
