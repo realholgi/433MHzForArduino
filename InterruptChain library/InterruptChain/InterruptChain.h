@@ -1,5 +1,5 @@
 /*
- * IntereruptChain library v1.2.0 DEV
+ * IntereruptChain library v1.2.0 (20120213)
  *
  * Copyright 2011 by Randy Simons http://randysimons.nl/
  *

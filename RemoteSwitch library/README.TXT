@@ -1,4 +1,4 @@
-RemoteSwitch library v2.3.0 DEV for Arduino 1.0
+RemoteSwitch library v2.3.0 (20121229) for Arduino 1.0
 Made by Randy Simons http://randysimons.nl/
 
 This library provides an easy class for Arduino, to send and receive signals
@@ -48,7 +48,7 @@ Notes:
 
 
 Changelog:
-RemoteSwitch library v2.3.0 DEV for Arduino 1.0
+RemoteSwitch library v2.3.0 (20121229) for Arduino 1.0
  - Improved reception quality by filtering too short pulses.
  - Dropped pre-v1.0 Arduino support.
  - Added RemoteReceiver::deinit()

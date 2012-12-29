@@ -1,4 +1,4 @@
-NewRemoteSwitch library v1.0.0 DEV for Arduino 1.0
+NewRemoteSwitch library v1.0.0 (20121229) for Arduino 1.0
 Made by Randy Simons http://randysimons.nl/
 
 This library provides an easy class for Arduino, to send and receive signals
@@ -31,8 +31,6 @@ Default installation demo:
  
 
 Changelog:
-NewRemoteSwitch library v1.0.0 DEV for Arduino 1.0
+NewRemoteSwitch library v1.0.0 (20121229) for Arduino 1.0
  - Support for receiving A-series Klik-aan-klik-uit remote. (NewRemoteReceiver)
  - With examples to test and demonstrate.
- 
- Note: the NewRemote classes might work on other devices as well, such as HomeEasy.
