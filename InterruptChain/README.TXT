@@ -14,7 +14,8 @@ Latest source and wiki: https://bitbucket.org/fuzzillogic/433mhzforarduino
 Installation of library:
  - Make sure Arduino is closed
  - Copy the directory InterruptChain to the Arduino library directory (usually
-   <arduinodir>/libraries/) 
+   <Sketchbook directory>/libraries/)
+   See http://arduino.cc/en/Guide/Libraries for detailed instructions.
 
 Examples are provided.
 

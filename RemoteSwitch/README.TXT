@@ -20,7 +20,8 @@ Latest source and wiki: https://bitbucket.org/fuzzillogic/433mhzforarduino
 Installation of library:
  - Make sure Arduino is closed
  - Copy the directory RemoteSwitch to the Arduino library directory (usually
-   <arduinodir>/libraries/)
+   <Sketchbook directory>/libraries/)
+   See http://arduino.cc/en/Guide/Libraries for detailed instructions.
  
 Default installation sender & demo:
  - Connect tha data-in-pin of a 433MHz transmitter to digital pin 11. See 
