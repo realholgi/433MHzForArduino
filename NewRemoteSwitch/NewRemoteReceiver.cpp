@@ -1,5 +1,5 @@
 /*
- * NewRemoteSwitch library v1.0.0 (20121229) made by Randy Simons http://randysimons.nl/
+ * NewRemoteSwitch library v1.1.0 (BETA) made by Randy Simons http://randysimons.nl/
  * See NewRemoteReceiver.h for details.
  *
  * License: GPLv3. See license.txt
@@ -70,6 +70,11 @@ void NewRemoteReceiver::deinit() {
 }
 
 void NewRemoteReceiver::interruptHandler() {
+	// This method is written as compact code to keep it fast. While breaking up this method into more
+	// methods would certainly increase the readability, it would also be much slower to execute.
+	// Making calls to other methods is quite expensive on AVR. As These interrupt handlers are called
+	// many times a second, calling other methods should be kept to a minimum.
+	
 	if (!_enabled) {
 		return;
 	}
@@ -136,17 +141,51 @@ void NewRemoteReceiver::interruptHandler() {
 			_state = -1;
 			return;
 		}
-	} else if (_state < 146) { // state 146 is first edge of stop-sequence. All bits before that adhere to default protocol, with exception of dim-bit
+	} else if (_state < 148) { // state 146 is first edge of stop-sequence. All bits before that adhere to default protocol, with exception of dim-bit
 		receivedBit <<= 1;
 
 		// One bit consists out of 4 bit parts.
 		// bit part durations can ONLY be 1 or 5 periods.
 		if (duration <= max1Period) {
 			receivedBit &= B1110; // Clear LSB of receivedBit
-		}
-		else if (duration >= min5Period && duration <= max5Period) {
+		} else if (duration >= min5Period && duration <= max5Period) {
 			receivedBit |= B1; // Set LSB of receivedBit
-		}
+		} else if (
+			// Check if duration matches the second part of stopbit (duration must be ~40T), and ...
+			(duration >= 20 * receivedCode.period && duration <= 80 * receivedCode.period) &&
+			// if first part op stopbit was a short signal (short signal yielded a 0 as second bit in receivedBit), and ...
+			((receivedBit & B10) == B00) &&
+			// we are in a state in which a stopbit is actually valid, only then ...
+			(_state == 147 || _state == 131) ) { 
+				// a valid signal was found!
+				if (
+						receivedCode.address != previousCode.address ||
+						receivedCode.unit != previousCode.unit ||
+						receivedCode.dimLevel != previousCode.dimLevel ||
+						receivedCode.groupBit != previousCode.groupBit ||
+						receivedCode.switchType != previousCode.switchType
+					) { // memcmp isn't deemed safe
+					repeats=0;
+					previousCode = receivedCode;
+				}
+				
+				repeats++;
+				
+				if (repeats>=_minRepeats) {
+					if (!_inCallback) {
+						_inCallback = true;
+						(_callback)(receivedCode);
+						_inCallback = false;
+					}
+					// Reset after callback.
+					_state=-1;
+					return;
+				}
+				
+				// Reset for next round
+				_state=0; // no need to wait for another sync-bit!
+				return;
+		}		
 		else { // Otherwise the entire sequence is invalid
 			_state = -1;
 			return;
@@ -222,14 +261,13 @@ void NewRemoteReceiver::interruptHandler() {
 						_state = -1;
 						return;
 				}
-
-				// Only if there is a dim-action chosen the dim-bits are present in the signal.
-				// Thus, if switchType is on or off, skip these dim-bits.
-				if (_state == 129 && receivedCode.switchType != 2) {
-					_state = 145; // 4 bits x 4 states = 16 states to skip.
-				}
-			} else if (_state < 146){
-				// States 130 - 145 are dim bit states. Note that these are skipped unless switchType == 2.
+				
+			} else if (_state < 146) {
+				// States 130 - 145 are dim bit states.
+				// If switchType == 0 these are never present.
+				// If switchType == 2 these are always present.
+				// If switchType == 1 these are or are not present, depending on the revision of the transmitter.
+				
 				receivedCode.dimLevel <<= 1;
 
 				// Decode bit.
@@ -246,48 +284,6 @@ void NewRemoteReceiver::interruptHandler() {
 				}
 			}
 		}
-	} else if (_state == 146) { // Verify stop bit part 1 of 2
-		// Duration must be ~1T
-		if (duration < min1Period || duration > max1Period) {
-			_state = -1;
-			return;
-		}
-	} else if (_state == 147) { // Verify stop bit part 2 of 2
-		// Duration must be ~40T
-		if (duration < 20 * receivedCode.period || duration > 80 * receivedCode.period) {
-			_state = -1;
-			return;
-		}
-
-		// receivedCode is a valid code!
-
-		if (
-				receivedCode.address != previousCode.address ||
-				receivedCode.unit != previousCode.unit ||
-				receivedCode.dimLevel != previousCode.dimLevel ||
-				receivedCode.groupBit != previousCode.groupBit ||
-				receivedCode.switchType != previousCode.switchType
-			) { // memcmp isn't deemed safe
-			repeats=0;
-			previousCode = receivedCode;
-		}
-
-		repeats++;
-
-		if (repeats>=_minRepeats) {
-			if (!_inCallback) {
-				_inCallback = true;
-				(_callback)(receivedCode);
-				_inCallback = false;
-			}
-			// Reset after callback.
-			_state=-1;
-			return;
-		}
-
-		// Reset for next round
-		_state=0; // no need to wait for another sync-bit!
-		return;
 	}
 
 	_state++;
