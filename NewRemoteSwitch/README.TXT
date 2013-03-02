@@ -33,6 +33,8 @@ Default installation demo:
 
 Changelog:
 NewRemoteSwitch library v1.1.0 (BETA) for Arduino 1.0
+ - BUGFIX: in many occassions, when receiving a dim-level, the code was rejected
+   even if the signal was correct.
  - Support decoding A-series transmitters which transmit a dim-level in combination 
    with an on-signal, instead of a dim-signal.
 

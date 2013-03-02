@@ -271,7 +271,7 @@ void NewRemoteReceiver::interruptHandler() {
 				receivedCode.dimLevel <<= 1;
 
 				// Decode bit.
-				switch (receivedBit) {
+				switch (receivedBit & B1111) {
 					case B0001: // Bit "0" received.
 						// receivedCode.dimLevel |= 0; But let's not do that, as it is wasteful.
 						break;
