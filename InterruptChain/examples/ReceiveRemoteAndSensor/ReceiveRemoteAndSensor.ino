@@ -67,14 +67,18 @@ void showNewCode(NewRemoteCode receivedCode) {
   }
   
   switch (receivedCode.switchType) {
-    case 0:
+    case NewRemoteCode::off:
       Serial.print(" off");
       break;
-    case 1:
+    case NewRemoteCode::on:
       Serial.print(" on");
       break;
-    case 2:
-      Serial.print(" dim level");
+    case NewRemoteCode::dim:
+      Serial.print(" dim level ");
+      Serial.print(receivedCode.dimLevel);
+      break;
+    case NewRemoteCode::on_with_dim:
+      Serial.print(" on with dim level ");
       Serial.print(receivedCode.dimLevel);
       break;
   }

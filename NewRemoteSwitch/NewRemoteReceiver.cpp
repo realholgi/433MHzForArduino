@@ -20,7 +20,7 @@ but with slightly different timings, as measured on my device.)
 		_   _
 dim:   | |_| |_     (T,T,T,T)
 
-T = short period of ~260�s. However, this code tries
+T = short period of ~260µs. However, this code tries
 to figure out the correct period
 
 A full frame looks like this:
@@ -111,8 +111,8 @@ void NewRemoteReceiver::interruptHandler() {
 	if (_state == -1) {
 		// wait for the long low part of a stop bit.
 		// Stopbit: 1T high, 40T low
-		// By default 1T is 260us, but for maximum compatiblity go as low as 120us
-		if (duration > 4800) { // =40*120us, minimal time between two edges before decoding starts.
+		// By default 1T is 260µs, but for maximum compatibility go as low as 120µs
+		if (duration > 4800) { // =40*120µs, minimal time between two edges before decoding starts.
 			// Sync signal received.. Preparing for decoding
 			repeats = 0;
 
@@ -156,7 +156,20 @@ void NewRemoteReceiver::interruptHandler() {
 			// if first part op stopbit was a short signal (short signal yielded a 0 as second bit in receivedBit), and ...
 			((receivedBit & B10) == B00) &&
 			// we are in a state in which a stopbit is actually valid, only then ...
-			(_state == 147 || _state == 131) ) { 
+			(_state == 147 || _state == 131) ) {
+				// If a dim-level was present...
+				if (_state == 147) {
+					// ... test if it was an "on" signal ...
+					if (receivedCode.switchType == NewRemoteCode::on) {
+						// ... set the appropriate switch type
+						receivedCode.switchType = NewRemoteCode::on_with_dim;
+					} else {
+						// ... otherwise it was wrong (e.g. off-signal with dim)
+						_state = -1;
+						return;
+					}
+				}
+				
 				// a valid signal was found!
 				if (
 						receivedCode.address != previousCode.address ||
@@ -233,13 +246,13 @@ void NewRemoteReceiver::interruptHandler() {
 				// States 110 - 113 are switch bit states.
 				switch (receivedBit & B1111) {
 					case B0001: // Bit "0" received.
-						receivedCode.switchType = 0;
+						receivedCode.switchType = NewRemoteCode::off;
 						break;
-					case B0100: // Bit "1" received.
-						receivedCode.switchType = 1;
+					case B0100: // Bit "1" received. Note: this might turn out to be a on_with_dim signal.
+						receivedCode.switchType = NewRemoteCode::on;
 						break;
-					case B0000: // Bit "dim" receivd.
-						receivedCode.switchType = 2;
+					case B0000: // Bit "dim" received.
+						receivedCode.switchType = NewRemoteCode::dim;
 						break;
 					default: // Bit was invalid. Abort.
 						_state = -1;
@@ -275,7 +288,7 @@ void NewRemoteReceiver::interruptHandler() {
 					case B0001: // Bit "0" received.
 						// receivedCode.dimLevel |= 0; But let's not do that, as it is wasteful.
 						break;
-					case B0100: // Bit "1" receivd.
+					case B0100: // Bit "1" received.
 						receivedCode.dimLevel |= 1;
 						break;
 					default: // Bit was invalid. Abort.

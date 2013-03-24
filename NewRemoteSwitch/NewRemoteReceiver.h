@@ -10,10 +10,17 @@
 #include <Arduino.h>
 
 struct NewRemoteCode {
+	enum SwitchType : unsigned short {
+		off = 0,
+		on = 1,
+		dim = 2,
+		on_with_dim = 3
+	};
+
 	unsigned int period;		// Detected duration in microseconds of 1T in the received signal
 	unsigned long address;		// Address of received code. [0..2^26-1]
 	boolean groupBit;			// Group bit set or not
-	unsigned short switchType;	// 0: swich off; 1: switch on; 2: set dim level
+	SwitchType switchType;		// off, on, dim, on_with_dim.
 	unsigned short unit;		// Unit code of received code [0..15]
 	unsigned short dimLevel;	// Dim level [0..15] iff switchType == 2
 };

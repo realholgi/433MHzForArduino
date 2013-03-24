@@ -51,12 +51,13 @@ void processCode(NewRemoteCode receivedCode) {
     // Yes!    
     // Is the received code identical to the learned code?
     if (receivedCode.address == learnedAddress && receivedCode.unit == learnedUnit) {
-      // Yes!      
-      // switchType == 1 means on, switchType == 0 means off.
-      if (receivedCode.switchType == 1) {
-        digitalWrite(13, HIGH);
-      } else if (receivedCode.switchType == 0) {
+      // Yes!
+      // Switch the LED off if the received code was "off".
+      // Anything else (on, dim, on_with_dim) will switch the LED on.
+      if (receivedCode.switchType == NewRemoteCode::off) {
         digitalWrite(13, LOW);
+      } else {
+        digitalWrite(13, HIGH);
       }
     }
   }

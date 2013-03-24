@@ -25,7 +25,7 @@ QUICKSTART:
    ReceiveRemoteAndSensor.
  * Connect a 433MHz receiver to digital pin 2 on the Arduino.
  * Run the sketch.
- * Enabled the serial monitor at 1152 baud.
+ * Enabled the serial monitor at 115200 baud.
  * Press buttons on your remote(s), and/or wait for your thermo/hygro sensor
    to transmit.
  * You should see the received data in the serial monitor.

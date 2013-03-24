@@ -4,7 +4,7 @@
  *
  * Connect the transmitter to digital pin 11, and the receiver to digital pin 2.
  *
- * When run, this sketch waits for a valid code from a new-style the receiver, 
+ * When run, this sketch waits for a valid code from a new-style the receiver,
  * decodes it, and retransmits it after 5 seconds.
  */
 
@@ -19,7 +19,7 @@ void setup() {
 void loop() {
 }
 
-void retransmitter(NewRemoteCode receivedCode) {  
+void retransmitter(NewRemoteCode receivedCode) {
   // Disable the receiver; otherwise it might pick up the retransmit as well.
   NewRemoteReceiver::disable();
 
@@ -33,21 +33,21 @@ void retransmitter(NewRemoteCode receivedCode) {
 
   NewRemoteTransmitter transmitter(receivedCode.address, 11, receivedCode.period);
 
-  // Switch type 0 = switch off, type 1 = switch on, type 2 = set dim level.
-  if (receivedCode.switchType == 2) {
+  if (receivedCode.switchType == NewReceiverCode::dim) {
     // Dimmer signal received
-    transmitter.sendDim(receivedCode.unit, receivedCode.dimLevel);	
-  } 
+    transmitter.sendDim(receivedCode.unit, receivedCode.dimLevel);
+  }
   else {
     // On/Off signal received
+    bool isOn == receivedCode.switchType == NewReceiverCode::on || receivedCode.switchType == NewReceiverCode::on_with_dim
 
     if (receivedCode.groupBit) {
       // Send to the group
-      transmitter.sendGroup(receivedCode.switchType);
-    } 
+      transmitter.sendGroup(isOn);
+    }
     else {
       // Send to a single unit
-      transmitter.sendUnit(receivedCode.unit, receivedCode.switchType);
+      transmitter.sendUnit(receivedCode.unit, isOn);
     }
   }
 
