@@ -10,7 +10,7 @@
 #include <Arduino.h>
 
 struct NewRemoteCode {
-	enum SwitchType : unsigned short {
+	enum SwitchType {
 		off = 0,
 		on = 1,
 		dim = 2,
