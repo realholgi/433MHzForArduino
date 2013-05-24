@@ -18,7 +18,7 @@ NewRemoteTransmitter::NewRemoteTransmitter(unsigned long address, unsigned short
 }
 
 void NewRemoteTransmitter::sendGroup(boolean switchOn) {
-	for (unsigned short i = _repeats; i >= 0; i--) {
+	for (short i = _repeats; i >= 0; i--) {
 		_sendStartPulse();
 
 		_sendAddress();
@@ -37,7 +37,7 @@ void NewRemoteTransmitter::sendGroup(boolean switchOn) {
 }
 
 void NewRemoteTransmitter::sendUnit(unsigned short unit, boolean switchOn) {
-	for (unsigned short i = _repeats; i >= 0; i--) {
+	for (short i = _repeats; i >= 0; i--) {
 		_sendStartPulse();
 
 		_sendAddress();
@@ -55,7 +55,7 @@ void NewRemoteTransmitter::sendUnit(unsigned short unit, boolean switchOn) {
 }
 
 void NewRemoteTransmitter::sendDim(unsigned short unit, unsigned short dimLevel) {
-	for (unsigned short i = _repeats; i >= 0; i--) {
+	for (short i = _repeats; i >= 0; i--) {
 		_sendStartPulse();
 
 		_sendAddress();
