@@ -30,7 +30,7 @@ void showTempHumi(byte *data) {
 
     byte channel, randomId;
     int temp;
-    short int humidity;
+    byte humidity;
 
     // Decode the data
     SensorReceiver::decodeThermoHygro(data, channel, randomId, temp, humidity);

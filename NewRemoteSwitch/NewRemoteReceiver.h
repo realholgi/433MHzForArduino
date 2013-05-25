@@ -1,5 +1,5 @@
 /*
- * NewRemoteSwitch library v1.1.0 (BETA) made by Randy Simons http://randysimons.nl/
+ * NewRemoteSwitch library v1.1.0 (20130601) made by Randy Simons http://randysimons.nl/
  *
  * License: GPLv3. See license.txt
  */
@@ -21,8 +21,8 @@ struct NewRemoteCode {
 	unsigned long address;		// Address of received code. [0..2^26-1]
 	boolean groupBit;			// Group bit set or not
 	SwitchType switchType;		// off, on, dim, on_with_dim.
-	unsigned short unit;		// Unit code of received code [0..15]
-	unsigned short dimLevel;	// Dim level [0..15] iff switchType == 2
+	byte unit;					// Unit code of received code [0..15]
+	byte dimLevel;				// Dim level [0..15] iff switchType == 2
 };
 
 typedef void (*NewRemoteReceiverCallBack)(NewRemoteCode);
@@ -57,7 +57,7 @@ class NewRemoteReceiver {
 		* @param minRepeats The number of times the same code must be received in a row before the callback is calles
 		* @param callback Pointer to a callback function, with signature void (*func)(NewRemoteCode)
 		*/
-		static void init(short interrupt, unsigned short minRepeats, NewRemoteReceiverCallBack callback);
+		static void init(int8_t interrupt, byte minRepeats, NewRemoteReceiverCallBack callback);
 
 		/**
 		* Enable decoding. No need to call enable() after init().
@@ -95,9 +95,9 @@ class NewRemoteReceiver {
 
 	private:
 
-		static unsigned short _interrupt;			// Radio input interrupt
-		volatile static unsigned short _state;		// State of decoding process. There are 49 states, 1 for "waiting for signal" and 48 for decoding the 48 edges in a valid code.
-		static unsigned short _minRepeats;
+		static int8_t _interrupt;					// Radio input interrupt
+		volatile static short _state;				// State of decoding process.
+		static byte _minRepeats;
 		static NewRemoteReceiverCallBack _callback;
 		static boolean _inCallback;					// When true, the callback function is being executed; prevents re-entrance.
 		static boolean _enabled;					// If true, monitoring and decoding is enabled. If false, interruptHandler will return immediately.

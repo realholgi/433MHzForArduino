@@ -1,5 +1,5 @@
 /*
- * NewRemoteSwitch library v1.1.0 (BETA) made by Randy Simons http://randysimons.nl/
+ * NewRemoteSwitch library v1.1.0 (20130601) made by Randy Simons http://randysimons.nl/
  *
  * License: GPLv3. See license.txt
  */
@@ -40,7 +40,7 @@ class NewRemoteTransmitter {
 		* @param periodusec	Duration of one period, in microseconds. One bit takes 8 periods (but only 4 for 'dim' signal).
 		* @param repeats	[0..8] The 2log-Number of times the signal is repeated. The actual number of repeats will be 2^repeats. 2 would be bare minimum, 4 seems robust, 8 is maximum (and overkill).
 		*/
-		NewRemoteTransmitter(unsigned long address, unsigned short pin, unsigned int periodusec = 260, unsigned short repeats = 4);
+		NewRemoteTransmitter(unsigned long address, byte pin, unsigned int periodusec = 260, byte repeats = 4);
 
 		/**
 		 * Send on/off command to the address group.
@@ -55,7 +55,7 @@ class NewRemoteTransmitter {
 		 * @param unit      [0..15] target unit.
 		 * @param switchOn  True to send "on" signal, false to send "off" signal.
 		 */
-		void sendUnit(unsigned short unit, boolean switchOn);
+		void sendUnit(byte unit, boolean switchOn);
 
 		/**
 		 * Send dim value to an unit on the current address.
@@ -63,13 +63,13 @@ class NewRemoteTransmitter {
 		 * @param unit      [0..15] target unit.
 		 * @param dimLevel  [0..15] Dim level. 0 for off, 15 for brightest level.
 		 */
-		void sendDim(unsigned short unit, unsigned short dimLevel);
+		void sendDim(byte unit, byte dimLevel);
 
 	protected:
 		unsigned long _address;		// Address of this transmitter.
-		unsigned short _pin;		// Transmitter output pin
+		byte _pin;					// Transmitter output pin
 		unsigned int _periodusec;	// Oscillator period in microseconds
-		unsigned short _repeats;	// Number over repetitions of one telegram
+		byte _repeats;				// Number over repetitions of one telegram
 
 		/**
 		 * Transmits start-pulse
@@ -86,7 +86,7 @@ class NewRemoteTransmitter {
 		 *
 		 * @param unit      [0-15] target unit.
 		 */
-		void _sendUnit(unsigned short unit);
+		void _sendUnit(byte unit);
 
 		/**
 		 * Transmits stop pulse.

@@ -1,10 +1,10 @@
 /*
- * RemoteSensor v1.0.1 (20120213)
+ * RemoteSensor library v1.0.2 (20130601) for Arduino 1.0
  *
  * This library encodes, encrypts en transmits data to
  * remote weather stations made by Hideki Electronics..
  * 
- * Copyright 2011 by Randy Simons http://randysimons.nl/
+ * Copyright 2011-2013 by Randy Simons http://randysimons.nl/
  *
  * Parts of this code based on Oopsje's CrestaProtocol.pdf, for which
  * I thank him very much!
@@ -20,7 +20,7 @@
  * Sensor base class
  ******************/
  
-SensorTransmitter::SensorTransmitter(unsigned short transmitterPin, unsigned short randomId) {
+SensorTransmitter::SensorTransmitter(byte transmitterPin, byte randomId) {
 	_transmitterPin = transmitterPin;
 	_randomId = randomId;
 	
@@ -74,7 +74,7 @@ byte SensorTransmitter::encryptAndAddCheck(byte *buffer) {
 } 
 
 /* Send one byte and keep the transmitter ready to send the next */
-void SensorTransmitter::sendManchesterByte(unsigned short transmitterPin, byte b) { 
+void SensorTransmitter::sendManchesterByte(byte transmitterPin, byte b) {
 	byte i;
 
 	// Send start-bit 0.  
@@ -100,7 +100,7 @@ void SensorTransmitter::sendManchesterByte(unsigned short transmitterPin, byte b
 }
 
 /* Send bytes (prepared by “encryptAndAddCheck”) and pause at the end. */
-void SensorTransmitter::sendManchesterPackage(unsigned short transmitterPin, byte *data, byte cnt) { 
+void SensorTransmitter::sendManchesterPackage(byte transmitterPin, byte *data, byte cnt) {
 	byte i;
 
 	for (i=0; i<cnt; i++) {
@@ -113,7 +113,7 @@ void SensorTransmitter::sendManchesterPackage(unsigned short transmitterPin, byt
 /**
  * Encrypts, adds checksums and transmits the data. The value of byte 3 in the data is ignored.
  */
-void SensorTransmitter::sendPackage(unsigned short transmitterPin, byte *data) {
+void SensorTransmitter::sendPackage(byte transmitterPin, byte *data) {
 	byte buffer[14], temp, count;
 	for (temp=0x5e; temp>0x40; temp+=0x40) { /* Sends 3 packages */
 		memcpy(buffer, data,  ((data[2] >> 1) & 0x1f) + 1);
@@ -132,11 +132,11 @@ void SensorTransmitter::sendPackage(unsigned short transmitterPin, byte *data) {
  * Thermo / Hygro sensor transmitter
  ***********************************/
  
-ThermoHygroTransmitter::ThermoHygroTransmitter(unsigned short transmitterPin,  unsigned short randomId, unsigned short channel)  : SensorTransmitter(transmitterPin, randomId) {
+ThermoHygroTransmitter::ThermoHygroTransmitter(byte transmitterPin,  byte randomId, byte channel)  : SensorTransmitter(transmitterPin, randomId) {
 	_channel = channel;	
 }
 
-void ThermoHygroTransmitter::sendTempHumi(int temperature, unsigned short humidity) {	
+void ThermoHygroTransmitter::sendTempHumi(int temperature, byte humidity) {
 	byte buffer[10];
 	
 	// Note: temperature is 10x the actual temperature! So, 23.5 degrees is passed as 235.

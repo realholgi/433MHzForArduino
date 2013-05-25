@@ -1,10 +1,10 @@
 /*
- * RemoteSensor v1.0.1 (20120213)
+ * RemoteSensor library v1.0.2 (20130601) for Arduino 1.0
  * 
  * This library receives, decodes, decrypts and receives data of
  * remote weather sensors made by Hideki Electronics.
  * 
- * Copyright 2011 by Randy Simons http://randysimons.nl/
+ * Copyright 2011-2013 by Randy Simons http://randysimons.nl/
  *
  * Parts of this code based on Oopsje's CrestaProtocol.pdf, for which
  * I thank him very much!
@@ -17,11 +17,7 @@
 #ifndef SensorReceiver_h
 #define SensorReceiver_h
 
-#if (ARDUINO >= 100)
-	#include <Arduino.h>
-#else
-	#include <WProgram.h>
-#endif
+#include <Arduino.h>
 
 typedef void (*SensorReceiverCallback)(byte *); // pointer to data
 
@@ -59,13 +55,13 @@ class SensorReceiver {
 		 *						First parameter is the decoded data, the second the length of the package in bytes, including checksums.
 		 * 					
 		 */
-		static void init(short int interrupt, SensorReceiverCallback callbackIn);
+		static void init(int8_t interrupt, SensorReceiverCallback callbackIn);
 
 		/**
 		* Decodes data of a Thermo Hygro sensor. Note that the unit of the temp is in dec-degree, or degrees times 10.
 		* Thus, a value of temp of 235 is actually 23.5 degrees.
 		*/
-		static void decodeThermoHygro(byte *data, byte &channel, byte &randomId, int &temp, short int &humidity);
+		static void decodeThermoHygro(byte *data, byte &channel, byte &randomId, int &temp, byte &humidity);
 
 		/**
 		* Enable decoding. No need to call enable() after init().

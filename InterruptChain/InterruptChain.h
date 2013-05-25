@@ -1,7 +1,7 @@
 /*
- * IntereruptChain library v1.2.0 (20120213)
+ * IntereruptChain library v1.3.0 (20130601)
  *
- * Copyright 2011 by Randy Simons http://randysimons.nl/
+ * Copyright 2011-2013 by Randy Simons http://randysimons.nl/
  *
  * License: GPLv3. See license.txt
  */
@@ -9,11 +9,7 @@
 #ifndef InterruptChain_h
 #define InterruptChain_h
 
-#if (ARDUINO >= 100)
-	#include <Arduino.h>
-#else
-	#include <WProgram.h>
-#endif
+#include <Arduino.h>
 
 // Arduino Mega has 6 interrupts. For smaller Arduinos and / or to save a few bytes memory you can lower it to 2 or even 1. Don't go higher than 6 tho.
 #define MAX_INTERRUPTS 6
@@ -24,11 +20,10 @@ typedef void (*InterruptCallback)();
  * For internal use
  */
 class InterruptChainLink {
-	private:
+	public:
 		InterruptChainLink *next;
 		InterruptCallback callback;
 
-	public:
 		void init(InterruptCallback callbackIn, InterruptChainLink *nextIn);
 
 		void processInterrupt();    
@@ -52,7 +47,7 @@ class InterruptChain {
 		
 		/**
 		 * Enables interrupt handling by InterruptChain for given interrupt pin. Note that this
-		 * is different from Arduino's interrupts(). 
+		 * is different from Arduino's interrupts(), which will enable _all_ interrupts on the CPU.
 		 *
 		 * @param interruptNr The interrupt pin number for which to enable handling.
 		 */

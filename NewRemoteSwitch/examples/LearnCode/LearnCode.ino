@@ -18,7 +18,7 @@
 
 boolean codeLearned = false;
 unsigned long learnedAddress;
-unsigned short learnedUnit;
+byte learnedUnit;
 
 void setup() {
   // LED-pin as output

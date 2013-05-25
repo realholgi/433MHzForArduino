@@ -1,5 +1,5 @@
 /*
- * NewRemoteSwitch library v1.1.0 (BETA) made by Randy Simons http://randysimons.nl/
+ * NewRemoteSwitch library v1.1.0 (20130601) made by Randy Simons http://randysimons.nl/
  * See NewRemoteReceiver.h for details.
  *
  * License: GPLv3. See license.txt
@@ -35,14 +35,14 @@ A full frame looks like this:
 
 ************/
 
-unsigned short NewRemoteReceiver::_interrupt;
-volatile unsigned short NewRemoteReceiver::_state;
-unsigned short NewRemoteReceiver::_minRepeats;
+int8_t NewRemoteReceiver::_interrupt;
+volatile short NewRemoteReceiver::_state;
+byte NewRemoteReceiver::_minRepeats;
 NewRemoteReceiverCallBack NewRemoteReceiver::_callback;
 boolean NewRemoteReceiver::_inCallback = false;
 boolean NewRemoteReceiver::_enabled = false;
 
-void NewRemoteReceiver::init(short interrupt, unsigned short minRepeats, NewRemoteReceiverCallBack callback) {
+void NewRemoteReceiver::init(int8_t interrupt, byte minRepeats, NewRemoteReceiverCallBack callback) {
 	_interrupt = interrupt;
 	_minRepeats = minRepeats;
 	_callback = callback;
@@ -79,10 +79,10 @@ void NewRemoteReceiver::interruptHandler() {
 		return;
 	}
 
-	static unsigned short receivedBit;		// Contains "bit" currently receiving
+	static byte receivedBit;		// Contains "bit" currently receiving
 	static NewRemoteCode receivedCode;		// Contains received code
 	static NewRemoteCode previousCode;		// Contains previous received code
-	static unsigned short repeats = 0;		// The number of times the an identical code is received in a row.
+	static byte repeats = 0;		// The number of times the an identical code is received in a row.
 	static unsigned long edgeTimeStamp[3] = {0, };	// Timestamp of edges
 	static unsigned int min1Period, max1Period, min5Period, max5Period;
 	static bool skip;

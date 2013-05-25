@@ -1,5 +1,5 @@
 /*
- * NewRemoteSwitch library v1.1.0 (BETA) made by Randy Simons http://randysimons.nl/
+ * NewRemoteSwitch library v1.1.0 (20130601) made by Randy Simons http://randysimons.nl/
  * See NewRemoteTransmitter.h for details.
  *
  * License: GPLv3. See license.txt
@@ -8,7 +8,7 @@
 #include "NewRemoteTransmitter.h"
 
 
-NewRemoteTransmitter::NewRemoteTransmitter(unsigned long address, unsigned short pin, unsigned int periodusec, unsigned short repeats) {
+NewRemoteTransmitter::NewRemoteTransmitter(unsigned long address, byte pin, unsigned int periodusec, byte repeats) {
 	_address = address;
 	_pin = pin;
 	_periodusec = periodusec;
@@ -18,7 +18,7 @@ NewRemoteTransmitter::NewRemoteTransmitter(unsigned long address, unsigned short
 }
 
 void NewRemoteTransmitter::sendGroup(boolean switchOn) {
-	for (short i = _repeats; i >= 0; i--) {
+	for (int8_t i = _repeats; i >= 0; i--) {
 		_sendStartPulse();
 
 		_sendAddress();
@@ -36,8 +36,8 @@ void NewRemoteTransmitter::sendGroup(boolean switchOn) {
 	}
 }
 
-void NewRemoteTransmitter::sendUnit(unsigned short unit, boolean switchOn) {
-	for (short i = _repeats; i >= 0; i--) {
+void NewRemoteTransmitter::sendUnit(byte unit, boolean switchOn) {
+	for (int8_t i = _repeats; i >= 0; i--) {
 		_sendStartPulse();
 
 		_sendAddress();
@@ -54,8 +54,8 @@ void NewRemoteTransmitter::sendUnit(unsigned short unit, boolean switchOn) {
 	}
 }
 
-void NewRemoteTransmitter::sendDim(unsigned short unit, unsigned short dimLevel) {
-	for (short i = _repeats; i >= 0; i--) {
+void NewRemoteTransmitter::sendDim(byte unit, byte dimLevel) {
+	for (int8_t i = _repeats; i >= 0; i--) {
 		_sendStartPulse();
 
 		_sendAddress();
@@ -75,7 +75,7 @@ void NewRemoteTransmitter::sendDim(unsigned short unit, unsigned short dimLevel)
 
 		_sendUnit(unit);
 
-		for (short j=3; j>=0; j--) {
+		for (int8_t j=3; j>=0; j--) {
 		   _sendBit(dimLevel & 1<<j);
 		}
 
@@ -91,13 +91,13 @@ void NewRemoteTransmitter::_sendStartPulse(){
 }
 
 void NewRemoteTransmitter::_sendAddress() {
-	for (short i=25; i>=0; i--) {
+	for (int8_t i=25; i>=0; i--) {
 	   _sendBit((_address >> i) & 1);
 	}
 }
 
-void NewRemoteTransmitter::_sendUnit(unsigned short unit) {
-	for (short i=3; i>=0; i--) {
+void NewRemoteTransmitter::_sendUnit(byte unit) {
+	for (int8_t i=3; i>=0; i--) {
 	   _sendBit(unit & 1<<i);
 	}
 }

@@ -33,19 +33,17 @@ void retransmitter(NewRemoteCode receivedCode) {
 
   NewRemoteTransmitter transmitter(receivedCode.address, 11, receivedCode.period);
 
-  if (receivedCode.switchType == NewReceiverCode::dim) {
+  if (receivedCode.switchType == NewRemoteCode::dim) {
     // Dimmer signal received
     transmitter.sendDim(receivedCode.unit, receivedCode.dimLevel);
-  }
-  else {
+  } else {
     // On/Off signal received
-    bool isOn == receivedCode.switchType == NewReceiverCode::on || receivedCode.switchType == NewReceiverCode::on_with_dim
+    bool isOn = receivedCode.switchType == NewRemoteCode::on || receivedCode.switchType == NewRemoteCode::on_with_dim;
 
     if (receivedCode.groupBit) {
       // Send to the group
       transmitter.sendGroup(isOn);
-    }
-    else {
+    } else {
       // Send to a single unit
       transmitter.sendUnit(receivedCode.unit, isOn);
     }
@@ -53,4 +51,3 @@ void retransmitter(NewRemoteCode receivedCode) {
 
   NewRemoteReceiver::enable();
 }
-

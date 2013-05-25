@@ -41,7 +41,7 @@ class RemoteReceiver {
 		* @param minRepeats The number of times the same code must be received in a row before the callback is calles
 		* @param callback Pointer to a callback function, with signature void (*func)(unsigned long, unsigned int). First parameter is the decoded data, the second the period of the timing.
 		*/
-		static void init(short interrupt, unsigned short minRepeats, RemoteReceiverCallBack callback);
+		static void init(int8_t interrupt, byte minRepeats, RemoteReceiverCallBack callback);
 
 		/**
 		* Enable decoding. No need to call enable() after init().
@@ -76,9 +76,9 @@ class RemoteReceiver {
 
 	private:
 
-		static unsigned short _interrupt;			// Radio input interrupt
-		volatile static unsigned short _state;		// State of decoding process. There are 49 states, 1 for "waiting for signal" and 48 for decoding the 48 edges in a valid code.
-		static unsigned short _minRepeats;
+		static int8_t _interrupt;					// Radio input interrupt
+		volatile static int8_t _state;				// State of decoding process. There are 49 states, 1 for "waiting for signal" and 48 for decoding the 48 edges in a valid code.
+		static byte _minRepeats;
 		static RemoteReceiverCallBack _callback;
 		static boolean _inCallback;					// When true, the callback function is being executed; prevents re-entrance.
 		static boolean _enabled;					// If true, monitoring and decoding is enabled. If false, interruptHandler will return immediately.

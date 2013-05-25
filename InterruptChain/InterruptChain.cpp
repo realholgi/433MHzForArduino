@@ -1,7 +1,7 @@
 /*
- * IntereruptChain library v1.2.0 (20120213)
+ * IntereruptChain library v1.3.0 (20130601)
  *
- * Copyright 2011 by Randy Simons http://randysimons.nl/
+ * Copyright 2011-2013 by Randy Simons http://randysimons.nl/
  *
  * License: GPLv3. See license.txt
  */
@@ -11,13 +11,6 @@
 void InterruptChainLink::init(InterruptCallback callbackIn, InterruptChainLink *nextIn) {
 	callback = callbackIn;
 	next = nextIn;
-}
-
-void InterruptChainLink::processInterrupt() {
-	(callback)();
-	if (next) {
-		next->processInterrupt();
-	}
 }
 
 InterruptChainLink *InterruptChain::chain[MAX_INTERRUPTS] = {NULL};
@@ -65,26 +58,50 @@ void InterruptChain::disable(byte interruptNr) {
 	detachInterrupt(interruptNr);
 }
 
-void InterruptChain::processInterrupt0() {     
-    chain[0]->processInterrupt();
+void InterruptChain::processInterrupt0() {
+	InterruptChainLink *current = chain[0];
+	while(current) {
+		(current->callback)();
+		current = current->next;
+	}
 }
 
 void InterruptChain::processInterrupt1() {     
-    chain[1]->processInterrupt();
+    InterruptChainLink *current = chain[1];
+	while(current) {
+		(current->callback)();
+		current = current->next;
+	}
 }
 
 void InterruptChain::processInterrupt2() {     
-    chain[2]->processInterrupt();
+    InterruptChainLink *current = chain[2];
+	while(current) {
+		(current->callback)();
+		current = current->next;
+	}
 }
 
 void InterruptChain::processInterrupt3() {     
-    chain[3]->processInterrupt();
+    InterruptChainLink *current = chain[3];
+	while(current) {
+		(current->callback)();
+		current = current->next;
+	}
 }
 
 void InterruptChain::processInterrupt4() {     
-    chain[4]->processInterrupt();
+    InterruptChainLink *current = chain[4];
+	while(current) {
+		(current->callback)();
+		current = current->next;
+	}
 }
 
 void InterruptChain::processInterrupt5() {     
-    chain[5]->processInterrupt();
+    InterruptChainLink *current = chain[5];
+	while(current) {
+		(current->callback)();
+		current = current->next;
+	}
 }

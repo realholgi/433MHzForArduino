@@ -10,16 +10,28 @@
 
 #include <InterruptChain.h>
 
-void echoLed() {     
+void echoLed() {
   digitalWrite(13, digitalRead(2));
 }
 
 void echoSerial() {
+  // Within interrupts handlers, interrupts are disabled.
+  // However, Serial doesn't seem to like it when interrupts are disabled,
+  // causing hangs when the transmit buffer is full.
+  // First, disable the interrupt chain, to prevent race conditions.
+  // Then enable interrupts.
+  InterruptChain::disable(0);
+  interrupts();
+
   if (digitalRead(2)) {
     Serial.println("The signal is HIGH!");
   } else {
     Serial.println("The signal is LOW!");
   }
+
+  // Disabling interrupts before enabling the interrupt chain.
+  noInterrupts();
+  InterruptChain::enable(0);
 }
 
 void setup() {
@@ -30,7 +42,7 @@ void setup() {
 	// This is merely for this demo; it is not required for interrupt handling.
     digitalWrite(2, HIGH);
 
-    // Links two callback to interrupt 0 with default mode CHANGE.    
+    // Links two callback to interrupt 0 with default mode CHANGE.
     InterruptChain::addInterruptCallback(0, echoLed);
     InterruptChain::addInterruptCallback(0, echoSerial);
 }

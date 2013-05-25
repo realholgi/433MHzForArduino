@@ -1,10 +1,10 @@
 /*
- * RemoteSensor v1.0.1 (20120213)
+ * RemoteSensor library v1.0.2 (20130601) for Arduino 1.0
  *
  * This library encodes, encrypts en transmits data to
  * remote weather stations made by Hideki Electronics..
  * 
- * Copyright 2011 by Randy Simons http://randysimons.nl/
+ * Copyright 20112-2013 by Randy Simons http://randysimons.nl/
  *
  * Parts of this code based on Oopsje's CrestaProtocol.pdf, for which
  * I thank him very much!
@@ -24,7 +24,7 @@ byte SensorReceiver::packageLength;
 word SensorReceiver::duration;
 boolean SensorReceiver::enabled;
 
-void SensorReceiver::init(short int interrupt, SensorReceiverCallback callbackIn) {
+void SensorReceiver::init(int8_t interrupt, SensorReceiverCallback callbackIn) {
   callback = callbackIn;
   
   enable();
@@ -200,7 +200,7 @@ void SensorReceiver::disable() {
 	enabled = false;
 }
 
-void SensorReceiver::decodeThermoHygro(byte *data, byte &channel, byte &randomId, int &temp, short int &humidity) {
+void SensorReceiver::decodeThermoHygro(byte *data, byte &channel, byte &randomId, int &temp, byte &humidity) {
 	channel = data[1] >> 5;
 	
 	// Internally channel 4 is used for the other sensor types (rain, uv, anemo).

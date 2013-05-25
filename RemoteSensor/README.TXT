@@ -1,4 +1,4 @@
-RemoteSensor library v1.0.1 (20120213) for Arduino 0022/1.0
+RemoteSensor library v1.0.1 (20120213) for Arduino 1.0
 Made by Randy Simons http://randysimons.nl/
 
 This library provides an easy class for Arduino, to send and receive signals
@@ -47,8 +47,14 @@ Default installation receiver & demo:
 
 
 Changelog:
+RemoteSensor library v1.0.2 (20130601) for Arduino 1.0
+ - Reduced memory usage (Flash, RAM). Because of this, a small backwards
+   incompatibility is introduced: The last parameter of
+   SensorReceiver::decodeThermoHygro now is a byte instead of short.
+ - Dropped support for Arduino pre-1.0
+
 RemoteSensor library v1.0.1 (20120213) for Arduino 0022/1.0
- - Ignore obviously too short or too long singals in SensorReceiver, for better
+ - Ignore obviously too short or too long signals in SensorReceiver, for better
    recognition rate.
  - Support for Arduino 1.0.
 

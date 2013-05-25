@@ -32,7 +32,7 @@ Default installation demo:
  
 
 Changelog:
-NewRemoteSwitch library v1.1.0 (BETA) for Arduino 1.0
+NewRemoteSwitch library v1.1.0 (20130601) for Arduino 1.0
  - BUGFIX: in many occasions, when receiving a dim-level, the code was rejected
    even if the signal was correct.
  - Support decoding A-series transmitters which transmit a dim-level in
@@ -41,6 +41,7 @@ NewRemoteSwitch library v1.1.0 (BETA) for Arduino 1.0
    for better readability. This change is backwards compatible.
  - Updated examples to use the new NewRemodeCode::on, ::off, ::dim and
    ::on_with_dim notation.
+ - Reduced memory usage (Flash, RAM)
 
 NewRemoteSwitch library v1.0.0 (20121229) for Arduino 1.0
  - Support for receiving A-series Klik-aan-klik-uit remote. (NewRemoteReceiver)

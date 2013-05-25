@@ -12,14 +12,14 @@
 * RemoteReceiver
 ************/
 
-unsigned short RemoteReceiver::_interrupt;
-volatile unsigned short RemoteReceiver::_state;
-unsigned short RemoteReceiver::_minRepeats;
+int8_t RemoteReceiver::_interrupt;
+volatile int8_t RemoteReceiver::_state;
+byte RemoteReceiver::_minRepeats;
 RemoteReceiverCallBack RemoteReceiver::_callback;
 boolean RemoteReceiver::_inCallback = false;
 boolean RemoteReceiver::_enabled = false;
 
-void RemoteReceiver::init(short interrupt, unsigned short minRepeats, RemoteReceiverCallBack callback) {
+void RemoteReceiver::init(int8_t interrupt, byte minRepeats, RemoteReceiverCallBack callback) {
 	_interrupt = interrupt;
 	_minRepeats = minRepeats;
 	_callback = callback;
@@ -52,10 +52,10 @@ void RemoteReceiver::interruptHandler() {
 	}
 
 	static unsigned int period;				// Calculated duration of 1 period
-	static unsigned short receivedBit;		// Contains "bit" currently receiving
+	static byte receivedBit;				// Contains "bit" currently receiving
 	static unsigned long receivedCode;		// Contains received code
 	static unsigned long previousCode;		// Contains previous received code
-	static unsigned short repeats = 0;		// The number of times the an identical code is received in a row.
+	static byte repeats = 0;				// The number of times the an identical code is received in a row.
 	static unsigned long edgeTimeStamp[3] = {0, };	// Timestamp of edges
 	static unsigned int min1Period, max1Period, min3Period, max3Period;
 	static bool skip;
