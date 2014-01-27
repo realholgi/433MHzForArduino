@@ -1,4 +1,4 @@
-NewRemoteSwitch library v1.1.0 (BETA) for Arduino 1.0
+NewRemoteSwitch library v1.2.0 (20140128) for Arduino 1.0
 Made by Randy Simons http://randysimons.nl/
 
 This library provides an easy class for Arduino, to send and receive signals
@@ -32,6 +32,13 @@ Default installation demo:
  
 
 Changelog:
+NewRemoteSwitch library v1.2.0 (20140128) for Arduino 1.0
+ - Revisited receiving dim-levels. Now it is always optional, check
+   dimLevelPresent to see if it was transmitted.
+   This change might break your code, as SwitchType::on_with_dim is removed.
+ - Added NewRemoteTransmitter::sendGroupDim.
+ - Added Dimmer example. Thanks to a Bitcoin donation, I could actually test it!
+
 NewRemoteSwitch library v1.1.0 (20130601) for Arduino 1.0
  - BUGFIX: in many occasions, when receiving a dim-level, the code was rejected
    even if the signal was correct.

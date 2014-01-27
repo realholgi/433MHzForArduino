@@ -1,5 +1,5 @@
 /*
- * IntereruptChain library v1.3.0 (20130601)
+ * IntereruptChain library v1.4.0 (20140128)
  *
  * Copyright 2011-2013 by Randy Simons http://randysimons.nl/
  *
@@ -14,7 +14,7 @@ void InterruptChainLink::init(InterruptCallback callbackIn, InterruptChainLink *
 }
 
 InterruptChainLink *InterruptChain::chain[MAX_INTERRUPTS] = {NULL};
-byte InterruptChain::mode[MAX_INTERRUPTS] = {CHANGE};
+byte InterruptChain::mode[MAX_INTERRUPTS] = {LOW};
 
 void InterruptChain::setMode(byte interruptNr, byte modeIn) {     
     mode[interruptNr] = modeIn;

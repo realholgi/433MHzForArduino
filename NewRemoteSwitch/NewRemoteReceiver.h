@@ -1,5 +1,5 @@
 /*
- * NewRemoteSwitch library v1.1.0 (20130601) made by Randy Simons http://randysimons.nl/
+ * NewRemoteSwitch library v1.2.0 (20140128) made by Randy Simons http://randysimons.nl/
  *
  * License: GPLv3. See license.txt
  */
@@ -13,8 +13,7 @@ struct NewRemoteCode {
 	enum SwitchType {
 		off = 0,
 		on = 1,
-		dim = 2,
-		on_with_dim = 3
+		dim = 2				
 	};
 
 	unsigned int period;		// Detected duration in microseconds of 1T in the received signal
@@ -22,7 +21,8 @@ struct NewRemoteCode {
 	boolean groupBit;			// Group bit set or not
 	SwitchType switchType;		// off, on, dim, on_with_dim.
 	byte unit;					// Unit code of received code [0..15]
-	byte dimLevel;				// Dim level [0..15] iff switchType == 2
+	boolean dimLevelPresent;	// Dim level present or not. Will be available for switchType dim, but might be available for on or off too, depending on remote.
+	byte dimLevel;				// Dim level [0..15]. Will be available if switchType is dim, on_with_dim or off_with_dim.
 };
 
 typedef void (*NewRemoteReceiverCallBack)(NewRemoteCode);

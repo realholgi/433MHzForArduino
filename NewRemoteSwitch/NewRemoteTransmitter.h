@@ -1,5 +1,5 @@
 /*
- * NewRemoteSwitch library v1.1.0 (20130601) made by Randy Simons http://randysimons.nl/
+ * NewRemoteSwitch library v1.2.0 (20140128) made by Randy Simons http://randysimons.nl/
  *
  * License: GPLv3. See license.txt
  */
@@ -58,12 +58,23 @@ class NewRemoteTransmitter {
 		void sendUnit(byte unit, boolean switchOn);
 
 		/**
-		 * Send dim value to an unit on the current address.
+		 * Send dim value to an unit on the current address. This will also switch on the device.
+		 * Note that low bound can be limited on the dimmer itself. Setting a dimLevel of 0
+		 * may not actually turn off the device.
 		 *
 		 * @param unit      [0..15] target unit.
 		 * @param dimLevel  [0..15] Dim level. 0 for off, 15 for brightest level.
 		 */
 		void sendDim(byte unit, byte dimLevel);
+		
+		/**
+		 * Send dim value the current address group. This will also switch on the device.
+		 * Note that low bound can be limited on the dimmer itself. Setting a dimLevel of 0
+		 * may not actually turn off the device.
+		 *
+		 * @param dimLevel  [0..15] Dim level. 0 for off, 15 for brightest level.
+		 */
+		void sendGroupDim(byte dimLevel);
 
 	protected:
 		unsigned long _address;		// Address of this transmitter.

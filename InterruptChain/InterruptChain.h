@@ -1,5 +1,5 @@
 /*
- * IntereruptChain library v1.3.0 (20130601)
+ * IntereruptChain library v1.4.0 (20140128)
  *
  * Copyright 2011-2013 by Randy Simons http://randysimons.nl/
  *
@@ -35,16 +35,22 @@ class InterruptChain {
 		 * Add an interrupt handler on interrupt pin interruptNr. The callback is of the same type as
 		 * Arduino's standard attachInterrupt().
 		 *
-		 * So, instead of attachInterrupt(0, callback, CHANGE); you can use
+		 * So, instead of attachInterrupt(0, callback, LOW); you can use
 		 * InterruptChain::addInterruptCallback(0, callback);
 		 * 
 		 * You can add more than one callback to a single interrupt! The callbacks are called in 
 		 * the reversed order in which they were added.
 		 * addInterruptCallback will also call this.enable(interruptNr).
 		 *
-		 */
+		 * By default, interrupt mode LOW is used. You can change the mode by calling
+		 * InterruptChain::setMode before or after calling InterruptChain::addInterruptCallback.
+		 *
+		 * @param interruptNr The interrupt pin number for which to set and enable handling.
+		 * @param callbackIn Pointer callback function.
+		 * @see http://arduino.cc/en/Reference/AttachInterrupt
+		 */		
 		static void addInterruptCallback(byte interruptNr, InterruptCallback callbackIn);
-		
+			
 		/**
 		 * Enables interrupt handling by InterruptChain for given interrupt pin. Note that this
 		 * is different from Arduino's interrupts(), which will enable _all_ interrupts on the CPU.
@@ -62,11 +68,12 @@ class InterruptChain {
 		static void disable(byte interruptNr);
 		
 		/**
-		 * Set the interrupt mode for given interrupt pin. By default the interrupt mode is CHANGE. 
+		 * Set the interrupt mode for given interrupt pin. By default the interrupt mode is LOW. 
 		 * If you need this changed, best to call setMode before adding interrupt handlers.
 		 * 
 		 * @param interruptNr Interrupt to set
-		 * @param modeIn LOW, CHANGE, RISING or FALLING
+		 * @param modeIn LOW, CHANGE, RISING FALLING or (depending on board) HIGH.
+		 * @see http://arduino.cc/en/Reference/AttachInterrupt
 		 */
 		static void setMode(byte interruptNr, byte modeIn);
 	

@@ -1,5 +1,5 @@
 /*
- * NewRemoteSwitch library v1.1.0 (20130601) made by Randy Simons http://randysimons.nl/
+ * NewRemoteSwitch library v1.2.0 (20140128) made by Randy Simons http://randysimons.nl/
  * See NewRemoteTransmitter.h for details.
  *
  * License: GPLv3. See license.txt
@@ -74,6 +74,35 @@ void NewRemoteTransmitter::sendDim(byte unit, byte dimLevel) {
 		delayMicroseconds(_periodusec);
 
 		_sendUnit(unit);
+
+		for (int8_t j=3; j>=0; j--) {
+		   _sendBit(dimLevel & 1<<j);
+		}
+
+		_sendStopPulse();
+	}
+}
+
+void NewRemoteTransmitter::sendGroupDim(byte dimLevel) {
+	for (int8_t i = _repeats; i >= 0; i--) {
+		_sendStartPulse();
+
+		_sendAddress();
+
+		// No group bit
+		_sendBit(true);
+
+		// Switch type 'dim'
+		digitalWrite(_pin, HIGH);
+		delayMicroseconds(_periodusec);
+		digitalWrite(_pin, LOW);
+		delayMicroseconds(_periodusec);
+		digitalWrite(_pin, HIGH);
+		delayMicroseconds(_periodusec);
+		digitalWrite(_pin, LOW);
+		delayMicroseconds(_periodusec);
+
+		_sendUnit(0);
 
 		for (int8_t j=3; j>=0; j--) {
 		   _sendBit(dimLevel & 1<<j);

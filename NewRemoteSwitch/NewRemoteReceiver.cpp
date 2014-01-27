@@ -1,5 +1,5 @@
 /*
- * NewRemoteSwitch library v1.1.0 (20130601) made by Randy Simons http://randysimons.nl/
+ * NewRemoteSwitch library v1.2.0 (20140128) made by Randy Simons http://randysimons.nl/
  * See NewRemoteReceiver.h for details.
  *
  * License: GPLv3. See license.txt
@@ -7,6 +7,7 @@
 
 #include "NewRemoteReceiver.h"
 
+#define RESET_STATE _state = -1 // Resets state to initial position.
 
 /************
 * NewRemoteReceiver
@@ -30,7 +31,7 @@ A full frame looks like this:
 - 1  bit:  group bit
 - 1  bit:  on/off/[dim]
 - 4  bit:  unit
-- [4 bit:  dim level. Only present of [dim] is chosen]
+- [4 bit:  dim level. Present of [dim] is chosen, but might be present anyway...]
 - stop pulse: 1T high, 40T low
 
 ************/
@@ -54,7 +55,7 @@ void NewRemoteReceiver::init(int8_t interrupt, byte minRepeats, NewRemoteReceive
 }
 
 void NewRemoteReceiver::enable() {
-	_state = -1;
+	RESET_STATE;
 	_enabled = true;
 }
 
@@ -130,7 +131,7 @@ void NewRemoteReceiver::interruptHandler() {
 	} else if (_state == 0) { // Verify start bit part 1 of 2
 		// Duration must be ~1T
 		if (duration > max1Period) {
-			_state = -1;
+			RESET_STATE;
 			return;
 		}
 		// Start-bit passed. Do some clean-up.
@@ -138,7 +139,7 @@ void NewRemoteReceiver::interruptHandler() {
 	} else if (_state == 1) { // Verify start bit part 2 of 2
 		// Duration must be ~10.44T
 		if (duration < 7 * receivedCode.period || duration > 15 * receivedCode.period) {
-			_state = -1;
+			RESET_STATE;
 			return;
 		}
 	} else if (_state < 148) { // state 146 is first edge of stop-sequence. All bits before that adhere to default protocol, with exception of dim-bit
@@ -159,21 +160,15 @@ void NewRemoteReceiver::interruptHandler() {
 			(_state == 147 || _state == 131) ) {
 				// If a dim-level was present...
 				if (_state == 147) {
-					// ... test if it was an "on" signal ...
-					if (receivedCode.switchType == NewRemoteCode::on) {
-						// ... set the appropriate switch type
-						receivedCode.switchType = NewRemoteCode::on_with_dim;
-					} else {
-						// ... otherwise it was wrong (e.g. off-signal with dim)
-						_state = -1;
-						return;
-					}
+					// mark received switch signal as signal-with-dim
+                    receivedCode.dimLevelPresent = true;
 				}
 				
 				// a valid signal was found!
 				if (
 						receivedCode.address != previousCode.address ||
 						receivedCode.unit != previousCode.unit ||
+						receivedCode.dimLevelPresent != previousCode.dimLevelPresent ||
 						receivedCode.dimLevel != previousCode.dimLevel ||
 						receivedCode.groupBit != previousCode.groupBit ||
 						receivedCode.switchType != previousCode.switchType
@@ -191,7 +186,7 @@ void NewRemoteReceiver::interruptHandler() {
 						_inCallback = false;
 					}
 					// Reset after callback.
-					_state=-1;
+					RESET_STATE;
 					return;
 				}
 				
@@ -200,7 +195,7 @@ void NewRemoteReceiver::interruptHandler() {
 				return;
 		}		
 		else { // Otherwise the entire sequence is invalid
-			_state = -1;
+			RESET_STATE;
 			return;
 		}
 
@@ -226,7 +221,7 @@ void NewRemoteReceiver::interruptHandler() {
 						receivedCode.address |= 1;
 						break;
 					default: // Bit was invalid. Abort.
-						_state = -1;
+						RESET_STATE;
 						return;
 				}
 			} else if (_state < 110) {
@@ -239,7 +234,7 @@ void NewRemoteReceiver::interruptHandler() {
 						receivedCode.groupBit = true;
 						break;
 					default: // Bit was invalid. Abort.
-						_state = -1;
+						RESET_STATE;
 						return;
 				}
 			} else if (_state < 114) {
@@ -255,7 +250,7 @@ void NewRemoteReceiver::interruptHandler() {
 						receivedCode.switchType = NewRemoteCode::dim;
 						break;
 					default: // Bit was invalid. Abort.
-						_state = -1;
+						RESET_STATE;
 						return;
 				}
 			} else if (_state < 130){
@@ -271,16 +266,14 @@ void NewRemoteReceiver::interruptHandler() {
 						receivedCode.unit |= 1;
 						break;
 					default: // Bit was invalid. Abort.
-						_state = -1;
+						RESET_STATE;
 						return;
 				}
 				
 			} else if (_state < 146) {
 				// States 130 - 145 are dim bit states.
-				// If switchType == 0 these are never present.
-				// If switchType == 2 these are always present.
-				// If switchType == 1 these are or are not present, depending on the revision of the transmitter.
-				
+                // Depending on hardware, these bits can be present, even if switchType is NewRemoteCode::on or NewRemoteCode::off
+
 				receivedCode.dimLevel <<= 1;
 
 				// Decode bit.
@@ -292,7 +285,7 @@ void NewRemoteReceiver::interruptHandler() {
 						receivedCode.dimLevel |= 1;
 						break;
 					default: // Bit was invalid. Abort.
-						_state = -1;
+						RESET_STATE;
 						return;
 				}
 			}

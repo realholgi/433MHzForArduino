@@ -9,3 +9,4 @@ NewRemoteTransmitter	KEYWORD1
 sendGroup	KEYWORD2
 sendUnit	KEYWORD2
 sendDim	KEYWORD2
+sendGroupDim	KEYWORD2

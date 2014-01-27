@@ -25,7 +25,8 @@ void echoSerial() {
 
   if (digitalRead(2)) {
     Serial.println("The signal is HIGH!");
-  } else {
+  } 
+  else {
     Serial.println("The signal is LOW!");
   }
 
@@ -35,18 +36,23 @@ void echoSerial() {
 }
 
 void setup() {
-    Serial.begin(9600);
-    pinMode(13, OUTPUT);
+  Serial.begin(9600);
+  pinMode(13, OUTPUT);
 
-    // Enable internal pull-up on pin 2.
-	// This is merely for this demo; it is not required for interrupt handling.
-    digitalWrite(2, HIGH);
+  // Enable internal pull-up on pin 2.
+  // This is merely for this demo; it is not required for interrupt handling.
+  digitalWrite(2, HIGH);
 
-    // Links two callback to interrupt 0 with default mode CHANGE.
-    InterruptChain::addInterruptCallback(0, echoLed);
-    InterruptChain::addInterruptCallback(0, echoSerial);
+  // By default, interrupt mode LOW is used.
+  // Change this by calling setMode.
+  InterruptChain::setMode(0, CHANGE);
+
+  // Add two callbacks to the same interrupt.
+  InterruptChain::addInterruptCallback(0, echoLed);
+  InterruptChain::addInterruptCallback(0, echoSerial);
 }
 
 void loop() {
-   // You can do other stuff here!
+  // You can do other stuff here!
 }
+

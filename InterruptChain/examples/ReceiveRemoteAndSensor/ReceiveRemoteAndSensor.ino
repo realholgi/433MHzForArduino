@@ -26,12 +26,15 @@ void setup() {
 
   // Interrupt -1 to indicate you will call the interrupt handler with InterruptChain
   RemoteReceiver::init(-1, 2, showOldCode);
-  
+
   // Again, interrupt -1 to indicate you will call the interrupt handler with InterruptChain
   NewRemoteReceiver::init(-1, 2, showNewCode);
 
   // And once more, interrupt -1 to indicate you will call the interrupt handler with InterruptChain
   SensorReceiver::init(-1, showTempHumi);
+
+  // Set interrupt mode CHANGE, instead of the default LOW.
+  InterruptChain::setMode(0, CHANGE);
 
   // On interrupt, call the interrupt handlers of remote and sensor receivers
   InterruptChain::addInterruptCallback(0, RemoteReceiver::interruptHandler);
@@ -40,7 +43,7 @@ void setup() {
 }
 
 void loop() {
-   // You can do other stuff here!
+  // You can do other stuff here!
 }
 
 // shows the received code sent from an old-style remote switch
@@ -58,14 +61,15 @@ void showNewCode(NewRemoteCode receivedCode) {
   // Print the received code.
   Serial.print("Addr ");
   Serial.print(receivedCode.address);
-  
+
   if (receivedCode.groupBit) {
     Serial.print(" group");
-  } else {
+  } 
+  else {
     Serial.print(" unit ");
     Serial.print(receivedCode.unit);
   }
-  
+
   switch (receivedCode.switchType) {
     case NewRemoteCode::off:
       Serial.print(" off");
@@ -74,15 +78,16 @@ void showNewCode(NewRemoteCode receivedCode) {
       Serial.print(" on");
       break;
     case NewRemoteCode::dim:
-      Serial.print(" dim level ");
-      Serial.print(receivedCode.dimLevel);
-      break;
-    case NewRemoteCode::on_with_dim:
-      Serial.print(" on with dim level ");
+      Serial.print(" dim");
       Serial.print(receivedCode.dimLevel);
       break;
   }
-  
+
+  if (receivedCode.dimLevelPresent) {
+    Serial.print(", dim level ");
+    Serial.print(receivedCode.dimLevel);
+  }
+
   Serial.print(", period: ");
   Serial.print(receivedCode.period);
   Serial.println("us.");
@@ -99,7 +104,7 @@ void showTempHumi(byte *data) {
 
     // Decode the data
     SensorReceiver::decodeThermoHygro(data, channel, randomId, temp, humidity);
-  
+
     // Print temperature. Note: temp is 10x the actual temperature!
     Serial.print("Temperature: ");
     Serial.print(temp / 10); // units
@@ -107,3 +112,4 @@ void showTempHumi(byte *data) {
     Serial.println(temp % 10); // decimal
   }
 }
+

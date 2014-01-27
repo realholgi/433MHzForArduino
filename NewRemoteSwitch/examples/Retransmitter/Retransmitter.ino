@@ -1,5 +1,5 @@
 /*
-* Demo for RF remote switch receiver.
+ * Demo for RF remote switch receiver.
  * For details, see NewRemoteReceiver.h!
  *
  * Connect the transmitter to digital pin 11, and the receiver to digital pin 2.
@@ -33,17 +33,26 @@ void retransmitter(NewRemoteCode receivedCode) {
 
   NewRemoteTransmitter transmitter(receivedCode.address, 11, receivedCode.period);
 
-  if (receivedCode.switchType == NewRemoteCode::dim) {
+  if (receivedCode.switchType == NewRemoteCode::dim || 
+    (receivedCode.switchType == NewRemoteCode::on && receivedCode.dimLevelPresent)) {
     // Dimmer signal received
-    transmitter.sendDim(receivedCode.unit, receivedCode.dimLevel);
-  } else {
+
+    if (receivedCode.groupBit) {
+      transmitter.sendGroupDim(receivedCode.dimLevel);
+    } 
+    else {
+      transmitter.sendDim(receivedCode.unit, receivedCode.dimLevel);
+    }
+  } 
+  else {
     // On/Off signal received
-    bool isOn = receivedCode.switchType == NewRemoteCode::on || receivedCode.switchType == NewRemoteCode::on_with_dim;
+    bool isOn = receivedCode.switchType == NewRemoteCode::on;
 
     if (receivedCode.groupBit) {
       // Send to the group
       transmitter.sendGroup(isOn);
-    } else {
+    } 
+    else {
       // Send to a single unit
       transmitter.sendUnit(receivedCode.unit, isOn);
     }
@@ -51,3 +60,4 @@ void retransmitter(NewRemoteCode receivedCode) {
 
   NewRemoteReceiver::enable();
 }
+
