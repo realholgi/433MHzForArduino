@@ -13,13 +13,14 @@
  */
 
 #include <SensorReceiver.h>
+#define MAX_DATA_LEN 14
 
 byte SensorReceiver::halfBit = 0;
 word SensorReceiver::clockTime;
 boolean SensorReceiver::isOne;
 unsigned long SensorReceiver::lastChange=0;
 SensorReceiverCallback SensorReceiver::callback;
-byte SensorReceiver::data[14];
+byte SensorReceiver::data[MAX_DATA_LEN];
 byte SensorReceiver::packageLength;
 word SensorReceiver::duration;
 boolean SensorReceiver::enabled;
@@ -34,7 +35,10 @@ void SensorReceiver::init(int8_t interrupt, SensorReceiverCallback callbackIn) {
   }  
 }
 
+static byte halfBitCounter = 255;
+
 void SensorReceiver::interruptHandler() {	
+
 	if (!enabled) {
 		return;
 	}
@@ -53,7 +57,6 @@ void SensorReceiver::interruptHandler() {
 	* previous bit.
 	*/
 	
-	static byte halfBitCounter = 255;
 	unsigned long currentTime=micros();
 	duration=currentTime-lastChange; // Duration = Time between edges
 
@@ -83,13 +86,15 @@ void SensorReceiver::interruptHandler() {
 			byte currentBit = (halfBit >> 1) % 9; // nine bits in a byte.
 
 			if (currentBit < 8) {
-				if (isOne) {
-					// Set current bit of current byte
-					data[currentByte] |= 1 << currentBit;
-				} 
-				else {
-				  // Reset current bit of current byte
-				  data[currentByte] &= ~(1 << currentBit);
+				if(currentByte < MAX_DATA_LEN) {
+					if (isOne) {
+						// Set current bit of current byte
+						data[currentByte] |= 1 << currentBit;
+					} 
+					else {
+					  // Reset current bit of current byte
+					  data[currentByte] &= ~(1 << currentBit);
+					}
 				}
 			} 
 			else {
@@ -124,14 +129,14 @@ void SensorReceiver::interruptHandler() {
 
 			// Done?
 			if (halfBit >= halfBitCounter) {
-				if (halfBit == halfBitCounter) {
+				if (halfBitCounter != 255) {
 					// Yes! Decrypt and call the callback					
 					if (decryptAndCheck()) {
 						(callback)(data);
 					}
 				}
-
 				// reset
+				reset();
 				halfBit = 0;
 				return;
 			}
@@ -152,6 +157,7 @@ void SensorReceiver::interruptHandler() {
 
 void SensorReceiver::reset() {
 	halfBit = 1;
+	halfBitCounter = 255;
 	clockTime = duration >> 1;
 	isOne = true;
 }
