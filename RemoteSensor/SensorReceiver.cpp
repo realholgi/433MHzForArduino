@@ -34,7 +34,7 @@ void SensorReceiver::init(int8_t interrupt, SensorReceiverCallback callbackIn) {
   }  
 }
 
-void SensorReceiver::interruptHandler() {	
+void ICACHE_RAM_ATTR SensorReceiver::interruptHandler() {	
 	if (!enabled) {
 		return;
 	}
@@ -52,7 +52,7 @@ void SensorReceiver::interruptHandler() {
 	* same as previous bit, and that long edge indicate that the current bit is the complement of the
 	* previous bit.
 	*/
-	
+
 	static byte halfBitCounter = 255;
 	unsigned long currentTime=micros();
 	duration=currentTime-lastChange; // Duration = Time between edges
@@ -150,13 +150,13 @@ void SensorReceiver::interruptHandler() {
 	return;
 }
 
-void SensorReceiver::reset() {
+void ICACHE_RAM_ATTR SensorReceiver::reset() {
 	halfBit = 1;
 	clockTime = duration >> 1;
 	isOne = true;
 }
 
-boolean SensorReceiver::decryptAndCheck() { 
+boolean ICACHE_RAM_ATTR SensorReceiver::decryptAndCheck() { 
 	byte cs1,cs2,i; 
 
 	cs1=0; 
@@ -177,7 +177,7 @@ boolean SensorReceiver::decryptAndCheck() {
 	return true; 
 }
 
-byte SensorReceiver::secondCheck(byte b) { 
+byte ICACHE_RAM_ATTR SensorReceiver::secondCheck(byte b) { 
   byte c;
   
 	if (b&0x80)
@@ -200,7 +200,7 @@ void SensorReceiver::disable() {
 	enabled = false;
 }
 
-void SensorReceiver::decodeThermoHygro(byte *data, byte &channel, byte &randomId, int &temp, byte &humidity) {
+void ICACHE_RAM_ATTR SensorReceiver::decodeThermoHygro(byte *data, byte &channel, byte &randomId, int &temp, byte &humidity) {
 	channel = data[1] >> 5;
 	
 	// Internally channel 4 is used for the other sensor types (rain, uv, anemo).
